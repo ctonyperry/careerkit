@@ -145,11 +145,17 @@ bar, and click it on any posting on LinkedIn, Indeed, or a company site.
 python -m careerkit.cli inbox --serve
 ```
 
-It confirms company and role, sends the page text verbatim, writes
+It reads company and role off the page, opens a small window on the receiver
+that saves the page text verbatim, writes
 `jd-inbox/YYYY-MM-DD-company-role.md` with the frontmatter the pipeline reads,
 and never overwrites. Verbatim matters: the anti-contamination check quotes
 the posting from that file later, and a paraphrased capture poisons the run.
 `careerkit inbox` on its own lists what is waiting.
+
+Why a window and not a request: job sites ship a Content Security Policy
+that blocks page scripts from calling any origin the site did not list, and a
+bookmarklet is a page script. The posting crosses to the receiver by
+`postMessage`, which no policy governs.
 
 ## Drafting
 

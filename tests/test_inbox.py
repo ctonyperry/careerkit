@@ -63,7 +63,9 @@ def test_bookmarklet_is_one_line_and_names_the_port() -> None:
     bm = bookmarklet(9999)
     assert bm.startswith("javascript:(function(){")
     assert "\n" not in bm
-    assert "127.0.0.1:'+port+'/capture" in bm and "var port=9999" in bm
+    assert "var port=9999" in bm
+    # No fetch from the page: job sites' CSP blocks it. The relay window does the write.
+    assert "/relay" in bm and "postMessage" in bm and "fetch(" not in bm
 
 
 def test_receiver_round_trip(tmp_path: Path) -> None:
@@ -77,13 +79,15 @@ def test_receiver_round_trip(tmp_path: Path) -> None:
         req = urllib.request.Request(f"http://127.0.0.1:{port}/capture", data=body.encode(),
                                      headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req) as resp:
-            assert resp.headers["Access-Control-Allow-Origin"] == "*"
             payload = json.loads(resp.read())
         assert payload["written"] is True and payload["pending"] == 1
         assert (tmp_path / payload["file"]).exists()
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/") as resp:
             page = resp.read().decode()
         assert "Save JD" in page and payload["file"] in page
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/relay") as resp:
+            relay = resp.read().decode()
+        assert "careerkit-ready" in relay and "fetch('/capture'" in relay
     finally:
         server.shutdown()
         server.server_close()

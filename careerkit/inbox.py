@@ -1,4 +1,4 @@
-# ruff: noqa: E501  (the bookmarklet source is one long string on purpose)
+# ruff: noqa: E501  (the bookmarklet and relay sources are long strings on purpose)
 """Capture a posting from the browser into jd-inbox with one click.
 
     careerkit inbox --serve        # start the receiver, open the install page
@@ -11,6 +11,14 @@ jd-inbox/YYYY-MM-DD-<company>-<role>.md with the frontmatter the pipeline
 reads. Nothing is summarised or reordered on the way in, because the
 anti-contamination check later quotes the posting from this file and a
 paraphrased capture poisons the run.
+
+How the text gets here matters. A bookmarklet runs as a script of the page it
+is clicked on, and job sites ship a Content Security Policy that blocks page
+scripts from calling any origin the site did not list. The first version
+fetched the receiver directly and LinkedIn refused it before it left the tab.
+So the button opens a small window on the receiver and hands it the posting
+with postMessage, which no CSP governs; the receiver's own page does the
+write, same-origin. Nothing crosses an origin except a message.
 
 What it cannot see: whether the page was the whole posting. Sites fold long
 descriptions behind a "show more"; the bookmarklet clicks the ones it knows
@@ -91,55 +99,92 @@ def pending(inbox: Path) -> list[tuple[str, str, str]]:
     return out
 
 
-# The bookmarklet. Plain ES5-ish so every browser runs it from a javascript:
-# URL. It: expands folded descriptions it knows about, takes the job
-# container's text where the site has one and the body otherwise, guesses
-# company and role from the tab title, asks the person to confirm both, and
-# posts to the receiver.
+# The bookmarklet. Plain ES5 so every browser runs it from a javascript: URL.
+# It expands folded descriptions it knows about, reads title and company from
+# the page's own elements (asking only when it finds nothing), takes the job
+# container's text where the site has one and the body otherwise, opens the
+# receiver's relay window, and hands it the posting by postMessage once the
+# relay says it is ready.
 BOOKMARKLET_JS = """
 (function(){
   var port=%d;
+  var origin='http://127.0.0.1:'+port;
   var host=location.hostname;
-  var q=function(s){return document.querySelector(s);};
-  var clicks=document.querySelectorAll('button');
-  for(var i=0;i<clicks.length;i++){
-    var t=(clicks[i].innerText||'').trim().toLowerCase();
-    if(t==='show more'||t==='see more'||t==='show full description'){try{clicks[i].click();}catch(e){}}
+  var q=function(s){var el=document.querySelector(s);return el&&el.innerText?el.innerText.trim():'';};
+  var first=function(list){for(var i=0;i<list.length;i++){var v=q(list[i]);if(v)return v;}return '';};
+  var buttons=document.querySelectorAll('button');
+  for(var i=0;i<buttons.length;i++){
+    var t=(buttons[i].innerText||'').trim().toLowerCase();
+    if(t==='show more'||t==='see more'||t==='show full description'){try{buttons[i].click();}catch(e){}}
   }
   var pick=function(){
-    var sels=['.jobs-description','#job-details','.jobs-box__html-content',
+    var sels=['#job-details','.jobs-description__content','.jobs-description','.jobs-box__html-content',
+              '.show-more-less-html__markup','.description__text',
               '#jobDescriptionText','.jobsearch-JobComponent','[data-testid="jobsearch-ViewJobLayout-jobDisplay"]',
               'main','article'];
-    for(var i=0;i<sels.length;i++){var el=q(sels[i]);if(el&&el.innerText&&el.innerText.length>400)return el.innerText;}
+    for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el&&el.innerText&&el.innerText.length>400)return el.innerText;}
     return document.body.innerText;
   };
   var title=document.title||'';
-  var company='',role='';
-  var m;
+  var company='',role='',m;
   if(/linkedin/.test(host)){
-    m=title.match(/^\\(?\\d*\\)?\\s*(.+?)\\s+at\\s+(.+?)\\s*\\|/); if(m){role=m[1];company=m[2];}
-    var c=q('.job-details-jobs-unified-top-card__company-name, .jobs-unified-top-card__company-name');
-    if(c&&c.innerText)company=c.innerText.trim();
-    var r=q('h1'); if(r&&r.innerText)role=r.innerText.trim();
+    role=first(['.job-details-jobs-unified-top-card__job-title h1','.job-details-jobs-unified-top-card__job-title','h1.top-card-layout__title','h1.t-24','h1']);
+    company=first(['.job-details-jobs-unified-top-card__company-name a','.job-details-jobs-unified-top-card__company-name','.jobs-unified-top-card__company-name a','.jobs-unified-top-card__company-name','a.topcard__org-name-link','.topcard__flavor']);
+    if(!company){m=title.match(/^\\(?\\d*\\)?\\s*(.+?)\\s*\\|\\s*(.+?)\\s*\\|\\s*LinkedIn/i); if(m){if(!role)role=m[1];company=m[2];}}
+    if(!company){m=title.match(/^(.+?)\\s+hiring\\s+(.+?)\\s+in\\s/i); if(m){company=m[1];if(!role)role=m[2];}}
   } else if(/indeed/.test(host)){
-    m=title.match(/^(.+?)\\s+-\\s+.+?\\s+-\\s+(.+?)\\s*\\|/); if(m){role=m[1];company=m[2];}
-    var r2=q('h1'); if(r2&&r2.innerText)role=r2.innerText.trim();
-    var c2=q('[data-testid="inlineHeader-companyName"], [data-company-name]');
-    if(c2&&c2.innerText)company=c2.innerText.trim();
+    role=first(['h1[data-testid="jobsearch-JobInfoHeader-title"]','h1.jobsearch-JobInfoHeader-title','h1']).replace(/\\s*-\\s*job post$/i,'');
+    company=first(['[data-testid="inlineHeader-companyName"] a','[data-testid="inlineHeader-companyName"]','div[data-company-name="true"]','[data-testid="jobsearch-CompanyInfoContainer"] a']);
+    if(!company){m=title.match(/^(.+?)\\s+-\\s+.+?\\s+-\\s+(.+?)\\s*\\|/); if(m){if(!role)role=m[1];company=m[2];}}
   } else {
-    var r3=q('h1'); if(r3&&r3.innerText)role=r3.innerText.trim();
-    m=title.match(/(?:at|@|-|\\|)\\s*([^|\\-]+)\\s*$/); if(m)company=m[1].trim();
+    role=first(['h1']);
+    m=title.match(/(?:\\bat\\b|@|\\||-)\\s*([^|\\-]+?)\\s*$/); if(m)company=m[1].trim();
   }
-  setTimeout(function(){
-    company=prompt('Company',company); if(company===null)return;
-    role=prompt('Role',role); if(role===null)return;
-    var body=JSON.stringify({url:location.href,title:title,company:company,role:role,text:pick(),source:'bookmarklet'});
-    fetch('http://127.0.0.1:'+port+'/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:body})
-      .then(function(r){return r.json();})
-      .then(function(j){alert(j.written?('Saved '+j.file+'\\nQueue: '+j.pending+' pending'):('Already captured: '+j.file));})
-      .catch(function(e){alert('careerkit inbox is not running.\\nStart it with: careerkit inbox --serve');});
-  },400);
+  role=role.replace(/^\\(?\\d*\\)?\\s*/,'').trim();
+  var done=false;
+  var payload={url:location.href,title:title,company:company,role:role,text:pick(),source:'bookmarklet'};
+  var send=function(){
+    if(!payload.company){payload.company=prompt('Company (not found on the page)','');if(payload.company===null)return;}
+    if(!payload.role){payload.role=prompt('Role (not found on the page)','');if(payload.role===null)return;}
+    var w=window.open(origin+'/relay','careerkit-inbox','width=560,height=360');
+    if(!w){alert('The browser blocked the popup. Allow popups for this site and click again.');return;}
+    var onmsg=function(e){
+      if(e.origin!==origin||e.data!=='careerkit-ready')return;
+      done=true; window.removeEventListener('message',onmsg);
+      e.source.postMessage(payload,origin);
+    };
+    window.addEventListener('message',onmsg);
+    setTimeout(function(){if(!done){window.removeEventListener('message',onmsg);alert('careerkit inbox did not answer. Start it with: careerkit inbox --serve');}},4000);
+  };
+  setTimeout(send,400);
 })();
+"""
+
+# The relay page. Same origin as the receiver, so its fetch is plain. It asks
+# the opener for the posting, writes it, and shows what was recorded.
+RELAY_HTML = """<!doctype html><meta charset="utf-8"><title>careerkit inbox</title>
+<style>body{font:15px/1.5 system-ui,sans-serif;margin:2em}code{font-size:.9em}.ok{color:#176c2f}.warn{color:#8a5a00}.err{color:#a11}</style>
+<p id="s">Waiting for the posting...</p>
+<script>
+(function(){
+  var out=document.getElementById('s');
+  window.addEventListener('message',function(e){
+    if(!e.data||typeof e.data!=='object'||!('text' in e.data))return;
+    fetch('/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(e.data)})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j.error){out.className='err';out.textContent='Not saved: '+j.error;return;}
+        out.className=j.written?'ok':'warn';
+        out.innerHTML=(j.written?'Saved ':'Already captured: ')+'<code>'+j.file+'</code><br>'
+          +'company: '+j.company+'<br>role: '+j.role+'<br>'+j.pending+' pending. This window closes in a moment.';
+        setTimeout(function(){window.close();},3500);
+      })
+      .catch(function(){out.className='err';out.textContent='The receiver did not answer.';});
+  });
+  if(window.opener){window.opener.postMessage('careerkit-ready','*');}
+  else{out.textContent='Open this from the Save JD button.';}
+})();
+</script>
 """
 
 
@@ -159,11 +204,12 @@ a.bm{{display:inline-block;padding:.5em 1em;border:1px solid #888;border-radius:
 code{{font-size:.9em}}</style>
 <h1>careerkit inbox</h1>
 <p>Receiving at <code>http://127.0.0.1:{port}</code>, writing to <code>{inbox}</code>.</p>
-<p>Drag this to your bookmarks bar:</p>
+<p>Drag this to your bookmarks bar (drag it again if you had an older one):</p>
 <p><a class="bm" href="{link}">Save JD</a></p>
 <p>Then open a posting on LinkedIn, Indeed, or a company site and click it. It
-confirms the company and role, sends the page text here verbatim, and tells you
-the queue depth. It never overwrites a file it already wrote.</p>
+reads the company and role off the page, opens a small window here that saves
+the posting verbatim, and closes it. It never overwrites a file it already
+wrote, and it asks for the company or role only when the page does not say.</p>
 <h2>Pending</h2><ul>{rows}</ul>
 """
 
@@ -172,23 +218,19 @@ class _Handler(BaseHTTPRequestHandler):
     inbox: Path = Path("jd-inbox")
     port: int = DEFAULT_PORT
 
-    def _cors(self) -> None:
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-
-    def do_OPTIONS(self) -> None:  # noqa: N802
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def do_GET(self) -> None:  # noqa: N802
-        body = install_page(self.inbox, self.port).encode("utf-8")
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
+    def _send(self, status: int, body: bytes, ctype: str) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def do_GET(self) -> None:  # noqa: N802
+        if self.path.startswith("/relay"):
+            self._send(200, RELAY_HTML.encode("utf-8"), "text/html; charset=utf-8")
+            return
+        body = install_page(self.inbox, self.port).encode("utf-8")
+        self._send(200, body, "text/html; charset=utf-8")
 
     def do_POST(self) -> None:  # noqa: N802
         length = int(self.headers.get("Content-Length", "0"))
@@ -196,18 +238,15 @@ class _Handler(BaseHTTPRequestHandler):
         try:
             capture = json.loads(raw.decode("utf-8"))
             path, written = write_capture(self.inbox, capture)
-            payload = {"file": path.name, "written": written, "pending": len(pending(self.inbox))}
+            payload = {
+                "file": path.name, "written": written, "pending": len(pending(self.inbox)),
+                "company": str(capture.get("company") or ""), "role": str(capture.get("role") or ""),
+            }
             status = 200
         except (ValueError, json.JSONDecodeError) as exc:
             payload = {"error": str(exc)}
             status = 400
-        body = json.dumps(payload).encode("utf-8")
-        self.send_response(status)
-        self._cors()
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+        self._send(status, json.dumps(payload).encode("utf-8"), "application/json")
         if status == 200:
             verb = "wrote" if payload["written"] else "already had"
             print(f"[inbox] {verb} {payload['file']} ({payload['pending']} pending)")
