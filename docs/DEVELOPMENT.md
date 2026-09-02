@@ -169,7 +169,13 @@ person is the only gate with access to the truth.
    literal tuple of employer names. It reads the spine now. It also found two
    defect entries that could only be replayed against the corpus they came
    from; they carry their fixture context now, so CI can replay them.
-5. **Cross-run drift.** The same unit rendered as "developer zero" in one
+5. ~~Interview prep from a run.~~ **Done 2026-09-02.** `careerkit prep` earned
+   its place the day the hiring-manager packet came back asking "what would
+   you probe" and the answer was already in the corpus: render notes that say
+   where a claim stops, verify items still open, the doubted figure beside the
+   one that is safe, and the declined record in the person's own words. The
+   command re-sorts what exists around the questions. It generates nothing.
+6. **Cross-run drift.** The same unit rendered as "developer zero" in one
    package and "first developer" in another. Visible now only by hand.
 
 Not on the list: anything that has not yet hurt in a real run.

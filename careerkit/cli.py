@@ -105,7 +105,7 @@ def _cmd_ingest_session(args: argparse.Namespace) -> int:
         Path(args.session).read_text(encoding="utf-8")
     )
     date = args.date or datetime.date.today().isoformat()
-    result = write_session(session, Path(args.data), date)
+    result = write_session(session, _data_dir(args), date)
     for uid in result.created_units:
         print(f"+ evidence/{uid}.yaml (provisional)")
     for wid in result.added_declines:
@@ -117,18 +117,31 @@ def _cmd_ingest_session(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_prep(args: argparse.Namespace) -> int:
+    from careerkit.prep import build_prep, render
+
+    sheet = build_prep(Path(args.run), _data_dir(args))
+    text = render(sheet)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+        print(f"Wrote {args.out} ({len(sheet.units)} cited units, {len(sheet.probes)} probes)")
+    else:
+        print(text)
+    return 0
+
+
 def _cmd_stale(args: argparse.Namespace) -> int:
     from careerkit.dataload import load_units
     from careerkit.stale import render, stale_units
 
-    units = load_units(Path(args.data) / "evidence")
+    units = load_units(_data_dir(args) / "evidence")
     entries = stale_units(units, older_than_days=args.older_than)
     print(render(entries))
     return 0
 
 
 def _cmd_export(args: argparse.Namespace) -> int:
-    blob = export_payload_json(Path(args.jd), Path(args.data))
+    blob = export_payload_json(Path(args.jd), _data_dir(args))
     out = Path(args.out)
     out.write_text(blob, encoding="utf-8")
     print(f"Wrote {out}")
@@ -240,6 +253,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     deslop.set_defaults(func=_cmd_deslop)
 
+    prep = sub.add_parser(
+        "prep", help="interview prep sheet from a run: bounds, open items, probes"
+    )
+    prep.add_argument("--run", required=True, help="run directory (manifest.yaml, claim-sheet.md)")
+    prep.add_argument("--data", default=None, help=_DATA_HELP)
+    prep.add_argument("--out", default=None, help="write markdown here instead of stdout")
+    prep.set_defaults(func=_cmd_prep)
+
     stale = sub.add_parser(
         "stale", help="units by how long since they were last confirmed; the re-ask list"
     )
@@ -269,6 +290,10 @@ def main(argv: list[str] | None = None) -> int:
     finalize.set_defaults(func=_cmd_finalize)
 
     args = parser.parse_args(argv)
+    # Render notes quote people, and people use dashes and accents. A Windows
+    # console defaulting to cp1252 turned those into "?" on the prep sheet.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     result: int = args.func(args)
     return result
 

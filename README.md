@@ -58,6 +58,13 @@ python tools/crosscheck.py examples/sample-run
 python tools/screen_check.py examples/sample-run
 ```
 
+Interview prep from the same run. Nothing generated: the corpus re-sorted
+around the questions the page invites.
+
+```bash
+python -m careerkit.cli prep --run examples/sample-run
+```
+
 The defect corpus, replayed:
 
 ```bash
@@ -74,6 +81,7 @@ The number that must not move is `no longer caught: 0`.
 | `careerkit resume` | Selects units under a length budget and writes the brief the LLM drafts from. Provisional evidence makes the brief a DRAFT. | Prose quality. It writes no prose. |
 | `careerkit lint` | Em dashes, self-rating, self-casting, scale boasts, numbers with no source, education not in the spine, phrases marked never-print. | A real fact omitted. |
 | `careerkit finalize` | Provisional units and open verify items on the selection. | An override the writer made after the selection. |
+| `careerkit prep` | The night-before sheet for a run: every cited unit with the bounds you set on it, the figures you doubt, what is still marked verify, and the requirements where the questions will land, with your own declined answer where you have one. | A probe about something the page does not claim. |
 | `careerkit stale` | What in the record has not been re-confirmed, oldest and weakest first. | Whether a fact went stale without anyone noticing. |
 | `tools/citecheck.py` | Every distinctive term in every bullet must appear in the unit that bullet cites. | A bullet that misrepresents a unit using only that unit's own words. |
 | `tools/crosscheck.py` | Spine tense, drift between documents in a run, sentences about the company that do not quote the posting, references to a bullet that is no longer there. | Semantic contamination that shares no words. |

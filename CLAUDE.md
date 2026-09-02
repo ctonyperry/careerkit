@@ -53,6 +53,7 @@ stderr.
     python tools/render_docx.py   <run>   # markdown to .docx
     python tools/regress.py               # every recorded defect still caught
     python tools/panel.py         <run>   # reviewer packets, then run the panel
+    python -m careerkit.cli prep --run <run>   # after sign-off: the night-before sheet
 
 Gates check form. Only a reader holding the corpus checks meaning. Both halves
 run before anything is sent, and the drafter is never the only reader.
