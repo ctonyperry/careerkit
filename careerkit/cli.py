@@ -256,6 +256,15 @@ def _cmd_terms(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mcp(args: argparse.Namespace) -> int:
+    try:
+        from careerkit.mcp_server import main as serve_mcp
+    except ModuleNotFoundError as exc:
+        print(f"{exc}. Install the extra: pip install -e '.[mcp]'", file=sys.stderr)
+        return 2
+    return serve_mcp()
+
+
 def _cmd_prep(args: argparse.Namespace) -> int:
     from careerkit.prep import build_prep, render
 
@@ -435,6 +444,9 @@ def main(argv: list[str] | None = None) -> int:
     terms.add_argument("--ignore", metavar="TERM", help="not a skill, or not relevant")
     terms.add_argument("--note", default=None, help="in the person's words")
     terms.set_defaults(func=_cmd_terms)
+
+    mcp = sub.add_parser("mcp", help="serve the pipeline to a chat over MCP (stdio)")
+    mcp.set_defaults(func=_cmd_mcp)
 
     prep = sub.add_parser(
         "prep", help="interview prep sheet from a run: bounds, open items, probes"

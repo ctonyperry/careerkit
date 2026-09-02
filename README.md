@@ -94,6 +94,7 @@ The number that must not move is `no longer caught: 0`.
 | `careerkit prep` | The night-before sheet for a run: every cited unit with the bounds you set on it, the figures you doubt, what is still marked verify, and the requirements where the questions will land, with your own declined answer where you have one. | A probe about something the page does not claim. |
 | `careerkit inbox` | The capture button: a local receiver and a bookmarklet that writes the posting to jd-inbox verbatim, with frontmatter, never overwriting. | Whether the page was the whole posting; sites fold the rest behind a button. |
 | `careerkit outcomes` | Every run in one table: captured, status, sent, and what came back, with your own notes on why. | Why, until you write it down. |
+| `careerkit mcp` | The same commands as tools for a chat: inbox, triage, verdict, terms queue and decision, prep, outcomes, stale. | Nothing new; it adds reach, not judgement. |
 | `careerkit stale` | What in the record has not been re-confirmed, oldest and weakest first. | Whether a fact went stale without anyone noticing. |
 | `tools/citecheck.py` | Every distinctive term in every bullet must appear in the unit that bullet cites. | A bullet that misrepresents a unit using only that unit's own words. |
 | `tools/crosscheck.py` | Spine tense, drift between documents in a run, sentences about the company that do not quote the posting, references to a bullet that is no longer there. | Semantic contamination that shares no words. |
@@ -185,6 +186,33 @@ bookmarklet is a page script. The posting crosses to the receiver by
 ```bash
 python -m careerkit.cli triage
 ```
+
+## From a chat
+
+`careerkit mcp` serves the pipeline over MCP: the inbox, the triage table,
+a verdict, the queue of unmapped language and a decision on one term, the
+prep sheet, the outcomes ledger, what has gone stale. Nothing that drafts,
+nothing that edits the corpus except by appending a decision you made. For
+Claude Desktop, add it to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "careerkit": {
+      "command": "C:/path/to/careerkit/.venv/Scripts/python.exe",
+      "args": ["-m", "careerkit.cli", "mcp"],
+      "env": {
+        "CAREERKIT_CORPUS": "C:/path/to/your/corpus",
+        "CAREERKIT_RUNS": "C:/path/to/your/runs"
+      }
+    }
+  }
+}
+```
+
+Then ask the chat to walk you through the terms queue; it calls
+`terms_queue`, you answer in your words, it calls `terms_decide` with your
+note. The decisions land in `terms.yaml` and the next triage reflects them.
 
 ## Drafting
 

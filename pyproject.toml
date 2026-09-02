@@ -16,7 +16,8 @@ dependencies = [
 
 [project.optional-dependencies]
 gates = ["python-docx>=1.1"]
-dev = ["pytest>=8", "ruff>=0.5", "python-docx>=1.1"]
+mcp = ["mcp>=2"]
+dev = ["pytest>=8", "ruff>=0.5", "python-docx>=1.1", "mcp>=2"]
 
 [project.scripts]
 careerkit = "careerkit.cli:main"
