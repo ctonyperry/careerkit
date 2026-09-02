@@ -192,6 +192,28 @@ def _cmd_inbox(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_triage(args: argparse.Namespace) -> int:
+    import os
+
+    from careerkit.triage import build_triage, render
+
+    root = args.dir or os.environ.get("CAREERKIT_RUNS")
+    if not root:
+        print("give --dir or set CAREERKIT_RUNS to the directory holding jd-inbox/",
+              file=sys.stderr)
+        return 2
+    inbox = Path(root)
+    if inbox.name != "jd-inbox":
+        inbox = inbox / "jd-inbox"
+    text = render(build_triage(inbox, _data_dir(args)))
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+        print(f"Wrote {args.out}")
+    else:
+        print(text)
+    return 0
+
+
 def _cmd_prep(args: argparse.Namespace) -> int:
     from careerkit.prep import build_prep, render
 
@@ -352,6 +374,13 @@ def main(argv: list[str] | None = None) -> int:
                        help="jd-inbox directory or its parent (default: $CAREERKIT_RUNS)")
     inbox.add_argument("--no-browser", action="store_true")
     inbox.set_defaults(func=_cmd_inbox)
+
+    triage = sub.add_parser("triage", help="every pending posting: parsed, verdicted, ranked")
+    triage.add_argument("--dir", default=None,
+                        help="jd-inbox directory or its parent (default: $CAREERKIT_RUNS)")
+    triage.add_argument("--data", default=None, help=_DATA_HELP)
+    triage.add_argument("--out", default=None, help="write markdown here instead of stdout")
+    triage.set_defaults(func=_cmd_triage)
 
     prep = sub.add_parser(
         "prep", help="interview prep sheet from a run: bounds, open items, probes"

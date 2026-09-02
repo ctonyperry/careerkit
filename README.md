@@ -84,6 +84,7 @@ The number that must not move is `no longer caught: 0`.
 
 | Part | What it does | What it cannot see |
 |---|---|---|
+| `careerkit triage` | Every pending posting in the inbox: parse validated against the alias table, verdict computed, ranked. Pick from one table, not fifteen files. | Whether you want the job, and a wrong parse that uses real tags. |
 | `careerkit verdict` | The fit call, computed before any drafting: required capabilities by status, tenure from the timeline, a stated credential with or without an equivalence clause, and one of three answers: apply, apply and name the gap, or a gate you do not meet. | Whether you want the job, and whether a HIT is the story worth telling. |
 | `careerkit gap` | Coverage per requirement: HIT, THIN, MISS, DECLINED. Recovery questions for the gaps. Tenure computed from the timeline, never typed. | Whether a HIT is the right story to tell. |
 | `careerkit resume` | Selects units under a length budget and writes the brief the LLM drafts from. Provisional evidence makes the brief a DRAFT. | Prose quality. It writes no prose. |
@@ -156,6 +157,26 @@ Why a window and not a request: job sites ship a Content Security Policy
 that blocks page scripts from calling any origin the site did not list, and a
 bookmarklet is a page script. The posting crosses to the receiver by
 `postMessage`, which no policy governs.
+
+## The workflow, end to end
+
+1. **Capture.** Click the button on a posting. It lands in `jd-inbox/`
+   verbatim, status pending.
+2. **Parse.** The one LLM step before drafting: `prompts/jd-parse.md` turns
+   the posting into requirements tagged with your alias table, written
+   beside it as `<name>-parsed.json`. Unmapped language goes to
+   `unknown_terms`, never to an invented tag.
+3. **Triage.** `careerkit triage` runs the verdict on every parsed posting,
+   rejects any parse that uses a tag the table does not know, and ranks the
+   inbox: apply, apply and name the gap, a gate you do not meet, then the
+   parses to fix and the postings still to parse.
+4. **Pick one and run it.** Gap report, claim sheet, draft, gates, panel,
+   your sign-off, then `prep` for the interview and `outcomes` for what
+   came back.
+
+```bash
+python -m careerkit.cli triage
+```
 
 ## Drafting
 

@@ -51,6 +51,9 @@ contradicted the spine, all in one afternoon.
 
 ### CP1 — JD on disk, then fit verdict
 
+With several postings waiting, run `careerkit triage` first and pick from the
+table; it validates every parse and computes the verdict for each.
+
 The JD must exist as a file in `jd-inbox/` (use `/save-jd` if it does not).
 Read it from disk; do not work from what was pasted into chat.
 

@@ -193,7 +193,13 @@ person is the only gate with access to the truth.
    plus a bookmarklet: one click on the posting, one verbatim file in
    `jd-inbox/`, never overwritten. Asked for in so many words: "I go to a
    job listing page, press a button, and it goes to the jd inbox."
-9. **Cross-run drift.** The same unit rendered as "developer zero" in one
+9. ~~Triage.~~ **Done 2026-09-02.** Fifteen postings arrived the afternoon the
+   button existed and the question was which to spend a run on. `careerkit
+   triage` runs the verdict on every parsed posting, ranks them, and refuses
+   a parse that uses a tag the alias table does not know, because an
+   invented tag is how a MISS turns into a HIT (defect
+   jd-parse-invented-tag, 2026-08-25).
+10. **Cross-run drift.** The same unit rendered as "developer zero" in one
    package and "first developer" in another. Visible now only by hand.
 
 Not on the list: anything that has not yet hurt in a real run.
