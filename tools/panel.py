@@ -19,6 +19,7 @@ findings only.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
@@ -144,7 +145,9 @@ def build(run_dir: Path) -> list[Path]:
                 jd_text = candidate.read_text(encoding="utf-8")
                 break
 
-    out_dir = ROOT / "evals" / "panels" / run_dir.name
+    # Packets belong beside the runs, not in the engine repo.
+    runs_root = Path(os.environ.get("CAREERKIT_RUNS") or ROOT)
+    out_dir = runs_root / "evals" / "panels" / run_dir.name
     out_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
 

@@ -209,9 +209,13 @@ def check_jd_trace(
     ]
     if not tokens:
         return findings
-    company_re = re.compile(
-        r"\b(?:" + "|".join(re.escape(t) for t in tokens) + r")\b", re.I
-    )
+    # A company name that is also a word ("Front") matches only as written,
+    # capitalised; "rebuilt the front end" is not a claim about Front. A brand
+    # styled lowercase ("honeycomb.io") keeps the case-insensitive match.
+    alternatives = [
+        f"(?i:{re.escape(t)})" if t == t.lower() else re.escape(t) for t in tokens
+    ]
+    company_re = re.compile(r"\b(?:" + "|".join(alternatives) + r")\b")
 
     for doc, text in docs.items():
         for lineno, sentence in _sentences(text):

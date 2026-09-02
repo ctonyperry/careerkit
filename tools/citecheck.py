@@ -158,6 +158,12 @@ def _section_key(heading: str) -> str:
 
 
 def _distinctive(text: str) -> set[str]:
+    # Markdown emphasis is not text. A "**Label.** Sentence" bullet hid the
+    # sentence boundary behind the asterisks, so the sentence's first word was
+    # read as a proper noun and blocked; and until 2026-09-02 the Selected
+    # Work section was never checked at all, because its heading matched no
+    # claim-sheet section, so the escape had no chance to show.
+    text = text.replace("*", "").replace("_", " ")
     # Sentence-initial capitals are grammar, not evidence. A bullet often runs
     # to several sentences, so "first word" means first of any sentence.
     starts = {m.end() - 1 for m in re.finditer(r"[.!?:]\s+\S", text)}
