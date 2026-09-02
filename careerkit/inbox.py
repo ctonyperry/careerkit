@@ -112,19 +112,22 @@ BOOKMARKLET_JS = """
   var host=location.hostname;
   var q=function(s){var el=document.querySelector(s);return el&&el.innerText?el.innerText.trim():'';};
   var first=function(list){for(var i=0;i<list.length;i++){var v=q(list[i]);if(v)return v;}return '';};
-  var buttons=document.querySelectorAll('button');
-  for(var i=0;i<buttons.length;i++){
-    var t=(buttons[i].innerText||'').trim().toLowerCase();
-    if(t==='show more'||t==='see more'||t==='show full description'){try{buttons[i].click();}catch(e){}}
-  }
-  var pick=function(){
-    var sels=['#job-details','.jobs-description__content','.jobs-description','.jobs-box__html-content',
+  var pane=function(){
+    var sels=['.jobs-search__job-details--container','.scaffold-layout__detail','.job-view-layout',
+              '.jobs-details','.jobs-description__content','#job-details','.jobs-description','.jobs-box__html-content',
               '.show-more-less-html__markup','.description__text',
               '#jobDescriptionText','.jobsearch-JobComponent','[data-testid="jobsearch-ViewJobLayout-jobDisplay"]',
               'main','article'];
-    for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el&&el.innerText&&el.innerText.length>400)return el.innerText;}
-    return document.body.innerText;
+    for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el&&el.innerText&&el.innerText.length>400)return el;}
+    return document.body;
   };
+  var box=pane();
+  var buttons=box.querySelectorAll('button');
+  for(var i=0;i<buttons.length;i++){
+    var t=(buttons[i].innerText||'').replace(/[^a-z ]/gi,'').trim().toLowerCase();
+    if(t.length<24&&/(show|see) (more|full)/.test(t)){try{buttons[i].click();}catch(e){}}
+  }
+  var pick=function(){return pane().innerText;};
   var title=document.title||'';
   var company='',role='',m;
   if(/linkedin/.test(host)){
@@ -141,8 +144,11 @@ BOOKMARKLET_JS = """
     m=title.match(/(?:\\bat\\b|@|\\||-)\\s*([^|\\-]+?)\\s*$/); if(m)company=m[1].trim();
   }
   role=role.replace(/^\\(?\\d*\\)?\\s*/,'').trim();
+  var url=location.href;
+  m=url.match(/[?&]currentJobId=(\\d+)/); if(m&&/linkedin/.test(host))url='https://www.linkedin.com/jobs/view/'+m[1]+'/';
+  m=url.match(/[?&](?:jk|vjk)=([a-f0-9]+)/); if(m&&/indeed/.test(host))url='https://www.indeed.com/viewjob?jk='+m[1];
   var done=false;
-  var payload={url:location.href,title:title,company:company,role:role,text:pick(),source:'bookmarklet'};
+  var payload={url:url,title:title,company:company,role:role,text:pick(),source:'bookmarklet'};
   var send=function(){
     if(!payload.company){payload.company=prompt('Company (not found on the page)','');if(payload.company===null)return;}
     if(!payload.role){payload.role=prompt('Role (not found on the page)','');if(payload.role===null)return;}
