@@ -113,8 +113,9 @@ def test_search_page_capture_is_cut_to_the_posting_pane(tmp_path: Path) -> None:
     follows the last site footer before "About the job"."""
     page = "\n".join([
         "Jobs based on your preferences", "Other Co", "Some Other Role", "Apply",
-        "LinkedIn Corporation (c) 2026", "", "Get job alerts for this search", "Halcyon Robotics",
-        "Solutions Engineer", "San Francisco", "Apply", "Save", "About the job", "The posting body.",
+        "LinkedIn Corporation (c) 2026", "", "Get job alerts for this search",
+        "Halcyon Robotics", "Solutions Engineer", "San Francisco", "Apply", "Save",
+        "About the job", "The posting body.",
     ])
     cut = trim_search_page(page)
     assert cut.startswith("Halcyon Robotics\nSolutions Engineer")
