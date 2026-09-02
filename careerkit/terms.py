@@ -118,9 +118,9 @@ def suggest_tag(term: str, aliases: AliasTable) -> str | None:
         if len(phrase) < 4:
             continue
         whole = re.search(r"(?<![a-z0-9])" + re.escape(phrase) + r"(?![a-z0-9])", low)
-        if whole or (len(phrase) >= 8 and phrase in low):
-            if best is None or len(phrase) > best[0]:
-                best = (len(phrase), tag)
+        matched = bool(whole) or (len(phrase) >= 8 and phrase in low)
+        if matched and (best is None or len(phrase) > best[0]):
+            best = (len(phrase), tag)
     return best[1] if best else None
 
 
