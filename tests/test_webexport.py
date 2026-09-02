@@ -1,6 +1,6 @@
 import json
 
-from conftest import FIXTURES
+from conftest import SAMPLE_JD
 from test_coverage import make_spine, make_unit
 
 from careerkit.dataload import load_parsed_jd
@@ -59,19 +59,19 @@ def test_tenure_want_state_reflects_the_math() -> None:
 def test_export_carries_spine_skeleton_and_locked_education(
     spine: Spine, units: list[EvidenceUnit]
 ) -> None:
-    jd = load_parsed_jd(FIXTURES / "figma-jd-parsed.json")
+    jd = load_parsed_jd(SAMPLE_JD)
     payload = build_export(jd, units, spine)
     assert payload.spine.education_locked is True
     assert spine.education is not None
     assert payload.spine.education_items == spine.education.items
-    assert any(r.earlier for r in payload.spine.roles)  # symantec/microsoft compress
-    assert any(r.omit for r in payload.spine.roles)  # leasing-contract
+    assert any(r.earlier for r in payload.spine.roles)  # the Earlier: render note
+    assert any(r.omit for r in payload.spine.roles)  # the omit render note
 
 
 def test_export_is_json_serializable_with_no_score(
     spine: Spine, units: list[EvidenceUnit]
 ) -> None:
-    jd = load_parsed_jd(FIXTURES / "figma-jd-parsed.json")
+    jd = load_parsed_jd(SAMPLE_JD)
     payload = build_export(jd, units, spine)
     blob = payload.model_dump_json()
     data = json.loads(blob)

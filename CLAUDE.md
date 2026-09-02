@@ -20,7 +20,7 @@ not support. Nothing here invents a fact.
 - `skills/` the Claude Code skills that drive the pipeline in chat.
 - `docs/` DEVELOPMENT.md (how this improves itself), STYLE-GUIDE.md (every
   writing rule with the defect that caused it), SPINE-SPEC.md (the corpus
-  over time), and `history/` for the design notes that got it here.
+  over time).
 - `prompts/` the LLM steps: JD parse, resume write, critique.
 
 ## Where the person lives
@@ -70,7 +70,7 @@ run before anything is sent, and the drafter is never the only reader.
 - Heredocs mangle backslashes and choke on more than one per command. Write
   code and multi-file batches with the Write or Edit tools.
 - Tests must pass on the sample corpus with no environment set. A test that
-  needs a particular person's record is marked `private_corpus`.
+  needs a particular person's record belongs in that person's corpus repo.
 
 ## Working with the person whose corpus it is
 

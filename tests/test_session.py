@@ -57,7 +57,7 @@ def test_write_session_persists_units_and_declines(tmp_path: Path) -> None:
     (data / "declined.yaml").write_text("declined: []\n", encoding="utf-8")
 
     session = IngestSession(
-        jd_source="examples/ripple-jd.md",
+        jd_source="examples/sample-corpus/jd/halcyon-solutions-engineer.md",
         placements=[
             SessionPlacement(
                 want_id="networking",

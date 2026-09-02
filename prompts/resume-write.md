@@ -43,7 +43,7 @@ the whole world; the ordering in it is already the right ordering.
   hard part", "stays in the room when it breaks") instead of a concrete action.
   Replace atmosphere with the specific thing done.
 
-## Shape (mirror examples/figma-resume-FINAL)
+## Shape (mirror examples/sample-run/resume.md)
 
 1. Header: name and contact VERBATIM from the brief; a title line mirroring the
    JD title; then the SUMMARY (see its own rules below).
@@ -65,7 +65,7 @@ floating free of anything concrete:
 
 1. **Atmosphere** (session-learnings): clauses describing a FEELING of
    competence. "Owns the hard part." "Stays in the room when it breaks."
-2. **JD-mirroring** (Tony, 2026-08-19): paraphrasing the posting back at the
+2. **JD-mirroring** (The author, 2026-08-19): paraphrasing the posting back at the
    reader. "Guides customer engineering teams from integration design through
    production rollout, then traces what breaks at scale to root cause" is just
    the JD's own bullets in the first person.

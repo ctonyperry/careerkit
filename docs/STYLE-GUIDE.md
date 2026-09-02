@@ -5,7 +5,7 @@ campfire, life-graph, and the shipped documents themselves. Where sources
 disagreed, the conflict is named and **resolved**, with the reasoning, so the
 same argument is never had twice.
 
-Precedence when something here is unclear: **Tony's words > the spine and
+Precedence when something here is unclear: **the author's words > the spine and
 evidence corpus > this guide > anything in an older repo.**
 
 Enforcement legend: **[code]** enforced by a gate · **[rule]** documented
@@ -46,7 +46,7 @@ convention, human-enforced · **[found]** empirical finding.
   strong unit may become two bullets; a continuity unit gets exactly one line.
   - *Conflict resolved.* careerkit caps units (leaving the bullet count
     undefined), career-graph caps bullets at 3-4/role. The shipped one-page
-    Okta resume runs 6 bullets on LinkedIn and reads fine, so the cap is 6, not
+    one shipped resume runs 6 bullets on LinkedIn and reads fine, so the cap is 6, not
     4 — but it is a cap, and the length ceiling above outranks it.
 - **[rule] When it spills, cut content before cutting type size.** Dropping
   below 9pt to win an argument with the page is a tell.
@@ -69,7 +69,7 @@ convention, human-enforced · **[found]** empirical finding.
     that sentence. Tailor the emphasis, never paraphrase the posting.
   - *Conflict resolved.* career-graph said 300-450, campfire 250-400, its own
     prose-render "~350", and careerkit had no rule at all. Shipped letters run
-    180 (Figma FDE), 230 (Cash App), 330 (Okta). The band above covers what
+    180, 230 and 330 on three shipped packages. The band above covers what
     actually ships and what actually gets read.
 - **[rule] The letter is not governed by the resume's length budget.** It is
   the right home for material the resume's budget cut, for target-company-
@@ -82,11 +82,11 @@ convention, human-enforced · **[found]** empirical finding.
 ### Header (canonical, and it must stay canonical)
 
 ```
-# Tony Perry
+# Morgan Vale
 
 **<Title mirroring the JD>**
 
-Walnut Creek, CA · ctonyperry@gmail.com · 775.229.0327 · linkedin.com/in/ctonyperry
+Portland, OR · morgan.vale@example.com · 503.555.0142 · linkedin.com/in/morganvale-example
 
 <summary prose, no heading>
 ```
@@ -95,8 +95,8 @@ Walnut Creek, CA · ctonyperry@gmail.com · 775.229.0327 · linkedin.com/in/cton
   contact string is middot-separated and built by `brief.py::_contact()`.
 - **[rule] The title line is bold and sits between name and contact.**
   - *Conflict resolved.* Three layouts had shipped: bold title above contact
-    (Figma, Anthropic), plain title above contact (Okta), and no title at all
-    (Cash App). The bold-title layout wins because the linter's summary parser
+    (two packages), plain title above contact (one), and no title at all
+    (one). The bold-title layout wins because the linter's summary parser
     already assumes it, and because a plain title line is indistinguishable
     from summary prose to both a parser and a skimming reader.
   - This mattered: with a `## Summary` heading instead, the linter's
@@ -140,7 +140,7 @@ the space) → `## Technical Skills` → `## Education`.
 - **[code] Education renders verbatim from the spine.** The linter BLOCKs any
   credential word not present there. This rule exists because an AI-processed
   resume once invented a community-college diploma.
-- **[rule] The visible window is fifteen years.** Tony's decision, 2026-08-26,
+- **[rule] The visible window is fifteen years.** the author's decision, 2026-08-26,
   after asking why nothing caught age tells and learning that the canonical
   summary opener mandated the loudest one. No total-career tenure figure
   anywhere on the page; per-role tenure is fine, since a job length is not an
@@ -207,7 +207,7 @@ Two mechanisms are real, and they point somewhere different:
 
 ### What a bullet is, before anything else [rule]
 
-This section was written on 2026-08-25, after Tony read a package that passed
+This section was written on 2026-08-25, after the author read a package that passed
 every gate and said of the Apple bullets: "I'm just kinda like, huh? what did I
 just read?" He was right, and the guide was part of the cause. Up to that point
 it was four hundred lines of prohibitions with no positive statement of what a
@@ -224,7 +224,7 @@ and the result around the action. This corpus already agrees: evidence units
 carry a `car:` block with `challenge`, `action` and `result`. The failure on
 2026-08-25 was rendering the action and discarding the other two.
 
-**A bullet reports; it does not narrate.** Added 2026-08-26 after Tony read a
+**A bullet reports; it does not narrate.** Added 2026-08-26 after the author read a
 set that had drifted into storytelling: "prioritizing verbosity over impact...
 I want bullets people will actually read." The tell is sequence. A narrated
 bullet walks the reader through what happened in order, joined by "then",
@@ -243,7 +243,7 @@ with only the specifics that prove it.
   story is told, not how a claim is made. One "then" per bullet at most.
 - **[rule] Cut hedged quantifiers.** "drew out enough of the customer's
   business" is three words of hedge around "the customer's business".
-- **[rule] Do not over-plain it either.** Tony, same message: "sometimes the
+- **[rule] Do not over-plain it either.** the author, same message: "sometimes the
   opposite, speaking too plainly." "Wrote the tests in plain English so the
   customer could check them" explains itself to nobody who needed it. The
   register is a competent professional writing to a peer, neither a college
@@ -255,7 +255,7 @@ with only the specifics that prove it.
 **Purpose is a fact, not an argument.** This qualifier was added within an hour
 of the rule above, because acting on that rule produced "Handled the cases that
 quietly lose data, because instrumentation nobody trusts gets switched off", and
-Tony's read was immediate: "reads promo material rather than informational."
+the author's read was immediate: "reads promo material rather than informational."
 He was right. Naming what a thing is for is informational. Explaining why the
 reader should be impressed is promotion, and the two are one clause apart.
 
@@ -303,7 +303,7 @@ reads as noise however precise it is.
   says what "asserted emitted xAPI statements matched the performed activity"
   says, to strictly more readers.
 - **[metric] `bullets_with_result` is the check.** `tools/metrics.py` counts
-  bullets stating an outcome. On the Moveworks draft it fell from 8 of 15 to 5
+  bullets stating an outcome. On one draft it fell from 8 of 15 to 5
   of 16 across three style passes, and nobody looked, because style review was
   chasing rhythm and no gate blocks on it. Read it every run. A resume where
   most bullets state no result is a list of tasks.
@@ -342,7 +342,7 @@ otherwise flat American prose; advisory because one may occasionally be right).
    of an action: "owns the hard part", "stays in the room when it breaks",
    "thrives in ambiguity". Fix by naming the action; if there is no action
    under it, cut the line.
-   - *This is not hypothetical:* the 2026-08-24 Okta letter shipped "I was the
+   - *This is not hypothetical:* a 2026-08-24 letter shipped "I was the
      one in the room with the customer... until it worked", almost verbatim the
      example the rules name.
 2. **Defensive / compensatory framing.** "self-taught but", "no degree, but",
@@ -410,7 +410,7 @@ draft rather than to hope.
   2026-08-24, on two different resumes, and the deterministic gates caught
   neither. *Not yet mechanized — the linter deliberately exempts bare years.*
 - **[rule] Settled phrasings:** "two dozen-plus" concurrent clients (never
-  "25+", never 100-200); "5/5 CSAT"; the McDonald's soft ~250k figure stays off
+  "25+", never 100-200); "5/5 CSAT"; the soft ~250k figure on the franchise rollout stays off
   paper; "$10M+" and "~2M users" are PRIMARY and print as-is.
 - **[rule] Round down, never up.** "99.8%+" may print as 99.8%, never 99.99%.
 
@@ -472,7 +472,7 @@ draft rather than to hope.
   weighted 2, preferred 1), then evidence strength (PRIMARY 3 / DOC 2 /
   MEMORY 1, +1 confirmed), then recency. The writer sees only what was
   selected, never the whole corpus.
-- **[found] The ranker is blind to target-company specificity.** For an Okta
+- **[found] The ranker is blind to target-company specificity.** For an identity-vendor
   application it cut the unit describing hands-on work inside customer Okta
   orgs, because its tags duplicated higher-ranked units. Carry that kind of
   evidence in the cover letter instead.
@@ -487,14 +487,14 @@ draft rather than to hope.
 - **[rule] The resume does not argue the credential; the letter states the path
   plainly and moves on.**
 - **[rule] Fit verdict comes before drafting, and "don't apply" is a valid
-  output.** JDs heavy on Tony's "loves" rank up; mostly-liaison roles get
+  output.** JDs heavy on the author's "loves" rank up; mostly-liaison roles get
   flagged even at full coverage.
 
 ---
 
 ## 5. What the gates actually catch (measured 2026-08-24)
 
-| Gate | Caught on the Okta package |
+| Gate | Caught on one package |
 |---|---|
 | `careerkit lint` | 0 blocking |
 | `careerkit finalize` | READY |
@@ -536,7 +536,7 @@ units or its own memory of them.
    `~/.claude/skills/avoid-ai-writing/SKILL.md`, which does not exist. This
    guide's section 3 is the content that command was reaching for.
 5. **Two shipped "FINAL" resumes violate rules written after them**
-   (`anthropic-ts-resume-FINAL.md` opens with the exact JD-mirroring shape the
+   (an early final draft opens with the exact JD-mirroring shape the
    critique prompt names as its BEFORE example; two finals use "Sole Technical
    Owner" as a heading against the spine's framing note). They are historical
    artifacts, not templates.

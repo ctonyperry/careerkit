@@ -67,7 +67,7 @@ SELF_RATING = (
 # Casting yourself in a role rather than describing what you did. Distinct from
 # self-rating: "expert in X" claims a level, "the technical voice" claims a
 # part. Three blind reviewers flagged "the technical voice" across three
-# packages on 2026-08-26, and Tony agreed. The actions underneath always say it
+# packages on 2026-08-26, and the author agreed. The actions underneath always say it
 # better, because a reader who concludes it trusts it.
 SELF_CASTING = (
     "the technical voice",

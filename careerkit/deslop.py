@@ -1,6 +1,6 @@
 """Optional final de-slop pass: deterministic, safe, mechanical rewrites.
 
-Tony's model (this session): rather than BLOCK the writer on mechanical style
+The author's model (this session): rather than BLOCK the writer on mechanical style
 nits, run a de-slop pass as an optional last step that just fixes them, like a
 formatter. This module only does transformations that are SAFE to apply blind:
 an em dash becomes a comma, stray whitespace collapses. It never rewrites a

@@ -3,8 +3,8 @@
 Until now this was an undocumented manual step, which meant the one gate that
 is measured rather than estimated -- page count -- depended on someone
 remembering how the last one was built. The layout here is reverse-engineered
-from runs/2026-08-25-edia-forward-deployed-engineer/resume.docx, which is the
-package Tony signed off on: 9pt Calibri body, 0.45in top/bottom and 0.5in
+from a shipped package's resume.docx, which is the
+package the author signed off on: 9pt Calibri body, 0.45in top/bottom and 0.5in
 left/right margins, tight paragraph spacing, section headings upper-cased.
 
     python tools/render_docx.py runs/<run-dir>
@@ -159,7 +159,7 @@ def main(argv: list[str]) -> int:
     locked: list[Path] = []
 
     def _try(render, src: Path, out: Path) -> None:
-        # Tony hand-tunes these in Word, which holds an exclusive lock. That is
+        # the author hand-tunes these in Word, which holds an exclusive lock. That is
         # a normal state, not an error, and it must not take down the render of
         # the other document or look like a crash.
         if not src.exists():

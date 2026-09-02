@@ -250,7 +250,7 @@ def render_brief(brief: ResumeBrief) -> str:
         f"- JD source: {brief.jd_source}",
         f"- Role family: {brief.role_family}",
         f"- Seniority: {brief.seniority}",
-        f"- Register: {brief.register_choice or 'UNSET (ask Tony to pick)'}",
+        f"- Register: {brief.register_choice or 'UNSET (ask the author to pick)'}",
         f"- Length: {brief.length}",
         "",
         "## Experience (newest first; write only from the units listed)",

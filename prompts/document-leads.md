@@ -7,7 +7,7 @@ against all open MISS/THIN wants, not re-read once per want.
 
 A lead is a memory jogger, never a fact. It is SECONDARY tier: a claim in an old
 document that a real instance MIGHT sit behind. It becomes evidence only after
-Tony confirms a specific instance through the four-beat interview. Shortcutting
+the author confirms a specific instance through the four-beat interview. Shortcutting
 "the old resume says it, include it" rebuilds the slop-laundering machine the
 whole system exists to avoid. Do not do it.
 
@@ -15,7 +15,7 @@ whole system exists to avoid. Do not do it.
 
 1. `gap-report.md` from `careerkit gap`. Read its Coverage table and Recovery
    questions. The open gaps are every requirement/skill marked MISS or THIN.
-   IGNORE skills marked HIT (already covered) and DECLINED (Tony confirmed he
+   IGNORE skills marked HIT (already covered) and DECLINED (The author confirmed he
    has not done them; never resurface these from a document).
 2. The uploaded document, read as text with its structure intact. You need the
    role/section HEADINGS, not just the bullet text, so a lead can carry its
@@ -34,7 +34,7 @@ index experience by era); carrying the document's own placement lets the
 recovery question jog memory with "under your 2019 LinkedIn section you wrote
 X." This is the ONE case where placement may precede confirmation, and only
 because it is the DOCUMENT's placement, shown as provenance, not an assertion
-that the unit belongs there. Tony still confirms the real role in the interview.
+that the unit belongs there. The author still confirms the real role in the interview.
 
 If the phrase had no role heading above it (a skills blob, a summary line),
 say so: `role_location: null`.
@@ -47,7 +47,7 @@ Write `document-leads.md` next to the document:
 # Document leads: <document filename>
 
 > SECONDARY tier. Each lead is a claim to confirm, not a fact. Nothing here
-> enters evidence until Tony confirms a specific instance (four-beat protocol:
+> enters evidence until the author confirms a specific instance (four-beat protocol:
 > existence -> location -> specifics -> defensibility).
 
 ## <want / skill tag> (<MISS|THIN>)
@@ -64,7 +64,7 @@ If the whole document produced nothing, say so plainly.
 ## Rules
 
 - Quote verbatim. Do not paraphrase, upgrade, or merge phrases; the point is to
-  show Tony his own past words so he can decide if a real instance is behind
+  show the author his own past words so he can decide if a real instance is behind
   them.
 - Never assign a skill tag the document does not support. A lead points at a
   want; it does not confirm the tag.
@@ -72,9 +72,9 @@ If the whole document produced nothing, say so plainly.
   the document states a number, quote it inside the phrase and leave it as the
   document's claim.
 - Leads feed the recovery questions as memory joggers. They do not answer them.
-  The interview still asks "did you do this, and when?" and Tony still owns the
+  The interview still asks "did you do this, and when?" and the author still owns the
   answer.
 
 A worked example of the downstream artifact these leads feed:
-`gap-report-figma.md` (the recovery questions) and `prompts/jd-parse.md` (the
+the run's gap report (the recovery questions) and `prompts/jd-parse.md` (the
 sibling chat step that produces the parsed JD).

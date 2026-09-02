@@ -4,7 +4,7 @@ The framing is the load-bearing part (session-learnings.md, step 4):
   "This role wants X. Your file is thin on X. Did you do X, and when?"
 NEVER "what would make you match better" (invites inflation). THIN questions
 name the existing evidence to jog memory, which is how the manual run
-recovered the McDonald's detail. Questions ask for a specific instance and a
+recovered the franchise-rollout detail. Questions ask for a specific instance and a
 rough date so defensibility starts at the question, not at review time.
 """
 

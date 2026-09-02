@@ -111,7 +111,7 @@ def _content_words(sentence: str) -> set[str]:
 
 
 def _org_key(org: str) -> str:
-    """First distinctive token of an org name: 'Apple (via TEKsystems)' -> 'apple'."""
+    """First distinctive token of an org name: 'Apple (via an agency)' -> 'apple'."""
     return re.split(r"[ (/,]", str(org).strip())[0].lower()
 
 
@@ -195,8 +195,8 @@ def check_jd_trace(
     docs: dict[str, str], jd_text: str, company: str, min_overlap: float = 0.34
 ) -> list[Finding]:
     """Sentences asserting something ABOUT the target company must be supported
-    by the JD file on disk. This catches cross-JD contamination: the Okta phrase
-    'all in on' landing in a Cash App cover letter."""
+    by the JD file on disk. This catches cross-JD contamination: a phrase from one
+    posting landing in the cover letter for another."""
     findings: list[Finding] = []
     jd_words = _content_words(jd_text)
     company_words = _content_words(company)
@@ -257,8 +257,8 @@ _DANGLING = re.compile(
 def check_dangling_reference(docs: dict[str, str]) -> list[Finding]:
     """A bullet pointing at something only a neighbouring bullet establishes.
 
-    Found on 2026-08-26, and by Tony rather than by a gate. A layout experiment
-    removed the McDonald's bullet, and the bullet after it still opened
+    Found on 2026-08-26, and by the author rather than by a gate. A layout experiment
+    removed the franchise-rollout bullet, and the bullet after it still opened
     "Diagnosed a provisioning sync failing partway through that rollout".
     Which rollout? The one that had just been deleted.
 

@@ -12,7 +12,7 @@ interview is the wrong tool for them:
   arithmetic is shown so the resume can defend it.
 
 Declined skills (data/declined.yaml) also surface here as a strategy note:
-a skill Tony has confirmed he has NOT done is not a gap to excavate, it is a
+a skill the author has confirmed he has NOT done is not a gap to excavate, it is a
 fit signal — compensate via adjacent units, or flag the JD as a poor fit.
 """
 

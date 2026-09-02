@@ -33,7 +33,7 @@ defects:
       The same defect in the digit form, live in Google Drive for several hours.
       Aggregates feel like arithmetic rather than claims, so they bypass the
       instinct to check a source.
-    caught_by: tony
+    caught_by: author
     enforced_by: lint:tenure-not-computed
     expect_block: true
 
@@ -109,10 +109,10 @@ defects:
     shipped: false
     text: "Block being all-in on AI is a big part of why I'm applying"
     problem: >-
-      "All in on" paraphrases the OKTA posting. The Cash App JD never mentions
+      "All in on" paraphrases a DIFFERENT posting. This JD never mentions
       AI. The sentiment happened to be true of Block, which is why this class
       survives casual review.
-    caught_by: tony
+    caught_by: author
     enforced_by: crosscheck:jd-trace
     expect_block: true
 
@@ -122,7 +122,7 @@ defects:
     shipped: false
     text: "planning SSO and SCIM deployments for enterprise customers"
     problem: >-
-      "Deployments" is Okta's noun. The units describe integrations and
+      "Deployments" is the other posting's noun. The units describe integrations and
       consulting engagements. Borrowing the employer's vocabulary for your own
       history is mirroring, not tailoring.
     caught_by: adversarial-eval
@@ -149,7 +149,7 @@ defects:
       Opens with an article rather than a verb, and drops the relative pronoun,
       so the reader misparses "expert customer engineering teams" before
       recovering.
-    caught_by: tony
+    caught_by: author
     enforced_by: lint:bullet-opener
     expect_block: false
 
@@ -161,7 +161,7 @@ defects:
     problem: >-
       A trailing clause carrying no information, present for cadence. Fails the
       deletion test.
-    caught_by: tony
+    caught_by: author
     enforced_by: skill:avoid-ai-writing
 
   - id: approval-framed-boast
@@ -172,7 +172,7 @@ defects:
     problem: >-
       The grammatical subject is their decision about him rather than the work.
       Re-subjecting onto the software fixes it without losing the fact.
-    caught_by: tony
+    caught_by: author
     enforced_by: human
     note: >-
       Deliberately not mechanised: "brought in to break a renewal-blocking
@@ -182,12 +182,12 @@ defects:
   - id: doubted-metric-printed
     date: 2026-08-25
     shipped: true
-    text: "a $10M rollout to ~2M McDonald's front-line workers"
+    text: "a $10M rollout to ~2M franchise front-line workers"
     problem: >-
-      Tony stopped standing behind the figure ("I think 3 might have been the
+      the author stopped standing behind the figure ("I think 3 might have been the
       real number") while it was live in Drive. Confirmation moved the corpus;
       doubt did not.
-    caught_by: tony
+    caught_by: author
     enforced_by: lint:do-not-print
     expect_block: true
     # The rule reads do_not_print off the corpus, so the fixture carries the
@@ -201,9 +201,9 @@ defects:
     shipped: false
     text: "**UX Telemetry Kit** (open source, npm): a React module publishing analytics events"
     problem: >-
-      An artifact Tony is not ready to share was written onto a resume, and the
+      An artifact the author is not ready to share was written onto a resume, and the
       selector kept offering the unit to the writer afterwards.
-    caught_by: tony
+    caught_by: author
     enforced_by: lint:do-not-print
     expect_block: true
     context:
@@ -227,7 +227,7 @@ defects:
     problem: >-
       Library implementation detail and learning-industry vocabulary (xAPI x4,
       SCORM, AICC) occupying 18% of a resume aimed at an identity company.
-    caught_by: tony
+    caught_by: author
     enforced_by: metrics:jargon_absent_from_jd
 
   - id: spilled-page
@@ -237,7 +237,7 @@ defects:
     problem: >-
       Both resumes read as one-page drafts and rendered to two, the shape the
       house rules call the worst possible. Nobody had measured.
-    caught_by: tony
+    caught_by: author
     enforced_by: metrics:pages
 
   - id: minimising-summary
@@ -248,7 +248,7 @@ defects:
     problem: >-
       Compressed a large consulting practice into two protocols and one verb,
       and dropped the concurrency the target JD explicitly requires.
-    caught_by: tony
+    caught_by: author
     enforced_by: human
     note: >-
       The deepest unmechanised class: the text is true, sourced, lint-clean, and
@@ -276,7 +276,7 @@ defects:
   - id: sp-side-claimed-as-idp-side
     date: 2026-08-25
     shipped: false
-    text: "Okta itself is not new territory ... custom claim expressions and external connections"
+    text: "The product itself is not new territory ... custom claim expressions and external connections"
     problem: >-
       Every SSO and SAML claim in the corpus is SERVICE-PROVIDER side: consuming
       assertions from a customer's identity provider, and building the SP half
@@ -336,13 +336,13 @@ defects:
     text: "Technical Consultant · Enterprise integrations, SSO and SCIM"
     problem: >-
       The LinkedIn profile is the master copy with no JD to serve, yet it was
-      written straight after the Okta package and came out Okta-shaped: an
+      written straight after the previous package and came out shaped like it: an
       identity-only headline, an About that called the LinkedIn years "mostly
       identity and provisioning work", and no mention of the applied-AI thread
       at all. The corpus carries fourteen units tagged enterprise-integration
       against four for SSO and five for agentic-development, so the emphasis
       inverted the evidence.
-    caught_by: tony
+    caught_by: author
     enforced_by: human
     note: >-
       The mirror image of cross-JD contamination: there, a target's language
@@ -356,7 +356,7 @@ defects:
     shipped: false
     text: "instrumenting internal React applications in Apple's information security organization"
     problem: >-
-      Tony confirmed the host applications were React, and the fact was written
+      the author confirmed the host applications were React, and the fact was written
       to the javascript-frameworks unit but not to apple-xapi-library, where the
       claim is actually made. A verifier reading the Apple unit found no React
       and correctly called the claim unsupported. True fact, wrong location,
@@ -387,7 +387,7 @@ defects:
   - id: education-composed-not-transcribed
     date: 2026-08-25
     shipped: false
-    text: "General Assembly accelerator and Lane Community College classes, with the 1993 date, the no-credential note and the GED all dropped"
+    text: "the certificate and the community-college classes, with the date, the no-credential note and the equivalency all dropped"
     problem: >-
       The education block was composed rather than transcribed from the spine.
       It dropped the date, dropped "no credential", and omitted the GED, while
@@ -404,11 +404,11 @@ defects:
   - id: empty-skills-requirement-reports-hit
     date: 2026-08-25
     shipped: false
-    text: "Salesforce Flow proficiency scored HIT against a corpus with zero Salesforce evidence"
+    text: "A vendor-specific platform skill scored HIT against a corpus with zero evidence for that vendor"
     problem: >-
       A capability requirement whose skills list is empty has nothing to fail
       against, so the coverage engine reports HIT by vacuous truth. On the
-      Salesforce parse this turned a total MISS into a HIT and inflated the
+      that parse this turned a total MISS into a HIT and inflated the
       headline coverage figure. The parse is what leaves the list empty, and it
       does so precisely when JD language maps to no canonical tag, which is the
       case where coverage is least likely to be real.
@@ -425,7 +425,7 @@ defects:
     shipped: false
     text: "the pre-sales unit was cut from a pre-sales resume by the length budget"
     problem: >-
-      linkedin-presales-technical records Tony performing the exact function a
+      linkedin-presales-technical records the author performing the exact function a
       pre-sales JD describes, and the ranking dropped it. Two causes compound:
       it is MEMORY tier, which costs it strength, and its tags are the generic
       customer-facing ones that a dozen other units also carry, so relevance
@@ -478,7 +478,7 @@ defects:
     caught_by: adversarial-eval
     enforced_by: human
     note: >-
-      Same family as edia-invented-origin-story, and the second time in two
+      Same family as run-a-invented-origin-story, and the second time in two
       packages that a JD's reusability language bent a real story one step past
       what its unit records. Worth watching for whether a third instance makes
       it a checkable pattern rather than a judgment call.
@@ -486,10 +486,10 @@ defects:
   - id: claim-uncited-in-sheet
     date: 2026-08-25
     shipped: true
-    text: "HRIS-sourced provisioning on Workday and ADP, in a bullet citing only the McDonald's unit"
+    text: "HRIS-sourced provisioning on Workday and ADP, in a bullet citing only the franchise-rollout unit"
     problem: >-
-      The Edia resume named Workday and ADP. The claim sheet's only LinkedIn
-      integration row cited linkedin-mcdonalds, which contains neither word.
+      One shipped resume named Workday and ADP. The claim sheet's only LinkedIn
+      integration row cited the-franchise-rollout-unit, which contains neither word.
       The fact is true and PRIMARY-tier on linkedin-hris-integrations; the row
       for it was never written. Shipped and exported to Drive, past lint,
       finalize, crosscheck and a nine-blocker adversarial pass, because every
@@ -499,7 +499,7 @@ defects:
     enforced_by: crosscheck:citecheck
     scope: run
     note: >-
-      Third instance of the same family (edia React, moveworks SME scope, this).
+      Third instance of the same family (run-a React, run-b SME scope, this).
       cite-term-unfound now catches the mechanical half: a distinctive term in a
       bullet that appears in none of the units cited for its section. It cannot
       catch a bullet that misrepresents a unit using only that unit's own words,
@@ -570,7 +570,7 @@ defects:
       Every bullet did the same amount of work: a verb sentence, then a second
       sentence adding roughly three specifics. Individually each was concrete
       and sourced, and lint, crosscheck, citecheck and finalize all passed
-      clean, because no rule looks at the SHAPE of a set of bullets. Tony read
+      clean, because no rule looks at the SHAPE of a set of bullets. The author read
       the result and said it still smelled of AI, which it did. Twelve bullets
       also opened with twelve different verbs, a thesaurus parade that pushes
       type-token ratio up where a person would repeat "built" and "ran".
@@ -635,7 +635,7 @@ defects:
       arguing why the reader should be impressed is promotion. This bullet
       carried an evaluative adverb (quietly), a causal clause justifying the
       work (because...), and a verb picked for weight over accuracy (handled,
-      for built). None of it added a fact. Tony: "reads promo material rather
+      for built). None of it added a fact. The author: "reads promo material rather
       than informational."
     caught_by: human
     enforced_by: human
@@ -651,8 +651,8 @@ defects:
     shipped: true
     text: "xAPI Specialist / Architect, and xAPI Specialist, for a role titled Security Analyst"
     problem: >-
-      The Apple contract's title of record with TEKsystems and Apple is Security
-      Analyst. "xAPI Specialist" was a functional description Tony wrote himself
+      The Apple contract's title of record with the agency and Apple is Security
+      Analyst. "xAPI Specialist" was a functional description the author wrote himself
       because the real title says nothing about the work, and it entered the
       spine as the title of record. Every gate then defended it correctly:
       lint checks titles against the spine, and the spine was wrong. Four
@@ -664,7 +664,7 @@ defects:
     note: >-
       Not mechanisable, and that is the point worth recording. Every gate here
       validates against the corpus, so a wrong fact IN the corpus is invisible
-      to all of them and stays invisible until Tony says otherwise. The spine
+      to all of them and stays invisible until the author says otherwise. The spine
       now separates title_of_record from functional_titles, and the rule is
       that the title line carries the record while a subtitle carries the
       function.
@@ -688,7 +688,7 @@ defects:
     note: >-
       False positives are not harmless here. A gate that cries wolf on a
       correctly-built package trains the operator to wave it through, which is
-      exactly how the real provisional escape shipped in the Edia run. The fix
+      exactly how the real provisional escape shipped in one run. The fix
       is the one already written down: finalize should take the claim sheet's
       cited unit ids instead of recomputing the selection.
 
@@ -697,8 +697,8 @@ defects:
     shipped: false
     text: "Diagnosed a provisioning sync failing partway through that rollout"
     problem: >-
-      A layout variant removed the McDonald's bullet and the next bullet still
-      said "that rollout". Which rollout? The one just deleted. Tony caught it;
+      A layout variant removed the franchise-rollout bullet and the next bullet still
+      said "that rollout". Which rollout? The one just deleted. The author caught it;
       no gate did. The deeper issue is that the format invites it: bullets are
       cut, reordered and re-selected per target, so any bullet leaning on a
       neighbour is one edit from nonsense, and the nonsense reads as
@@ -732,7 +732,7 @@ defects:
     scope: document
     note: >-
       Mechanised as echo-restated. The skills line and education are excluded:
-      the skills line is deliberately redundant, which Tony calls keyword
+      the skills line is deliberately redundant, which the author calls keyword
       insurance, and counting it would flag the one repetition doing its job.
 
   - id: colon-enumeration-default
@@ -785,7 +785,7 @@ defects:
     enforced_by: lint:self-casting
     form: bullet
     note: >-
-      Tony agreed on 2026-08-26 and asked for it encoded. A closed phrase list
+      the author agreed on 2026-08-26 and asked for it encoded. A closed phrase list
       beside SELF_RATING, blocking, since the fix is always available: name the
       action.
 
@@ -798,7 +798,7 @@ defects:
       A superlative standing in for a number, in documents that give real
       figures freely. One critic put it exactly: the rest of the page gives
       numbers, "which makes the one place it withholds one conspicuous". On the
-      Intelligems package it was worse than conspicuous, since Selected Work
+      one package it was worse than conspicuous, since Selected Work
       states roughly two million users two inches above the clause. Either the
       figure exists, in which case use it, or it does not, in which case the
       clause asserts importance rather than reporting it.
@@ -807,8 +807,8 @@ defects:
     form: bullet
     note: >-
       Blocking. The clause also reliably wrecks the sentence it sits in: on
-      Intelligems it stranded "by comparing" three commas from the verb it
-      modified, and on Okta it created a garden path.
+      one package it stranded "by comparing" three commas from the verb it
+      modified, and on another it created a garden path.
 
   - id: register-spike
     date: 2026-08-26
@@ -835,9 +835,9 @@ defects:
     problem: >-
       STYLE-GUIDE already said it: the GED is included deliberately, when the
       JD states a degree requirement, and left off when education is not at
-      issue. The Intelligems posting has no degree requirement anywhere. The
+      issue. That posting had no degree requirement anywhere. The
       line went in anyway, carried by momentum from three packages that did
-      need it. Tony's read: "try-hard or something", which is exactly what an
+      need it. The author's read: "try-hard or something", which is exactly what an
       unprompted credential disclosure is.
     caught_by: human
     enforced_by: human

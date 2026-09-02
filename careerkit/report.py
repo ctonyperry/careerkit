@@ -95,7 +95,7 @@ def render_gap_report(
     lines += [
         "---",
         "Answers become new evidence units (status: provisional, tier: MEMORY)",
-        "after a defensibility check. Nothing auto-confirms; Tony is the trust gate.",
+        "after a defensibility check. Nothing auto-confirms; the author is the trust gate.",
         "",
     ]
     return "\n".join(lines)

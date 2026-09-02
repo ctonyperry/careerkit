@@ -1,80 +1,9 @@
 from pathlib import Path
 
-import pytest
 from conftest import DATA_DIR
 
 from careerkit.dataload import AliasTable, load_declined
-from careerkit.models import EvidenceUnit, Spine, Status, Tier
-
-
-@pytest.mark.private_corpus
-def test_spine_loads_all_roles(spine: Spine) -> None:
-    ids = {r.id for r in spine.roles}
-    assert ids == {
-        "symantec-support",
-        "microsoft-qa",
-        "ims",
-        "athenaonline",
-        "general-assembly",
-        "leasing-contract",
-        "linkedin-tc",
-        "apple-xapi",
-    }
-    assert spine.identity.resume_header == "Tony Perry"
-
-
-@pytest.mark.private_corpus
-def test_role_end_years_parse_from_display_strings(spine: Spine) -> None:
-    by_id = {r.id: r for r in spine.roles}
-    assert by_id["microsoft-qa"].end_year() == 1999  # "Early 1999"
-    assert by_id["apple-xapi"].end_year() == 2026  # "Jun 2026"
-    assert by_id["ims"].end_year() == 2011
-
-
-@pytest.mark.private_corpus
-def test_all_evidence_units_load(units: list[EvidenceUnit]) -> None:
-    # The corpus GROWS with every dogfood run (it is the byproduct), so assert
-    # the invariant rather than a count that rots: every unit file on disk
-    # parses into a unit.
-    on_disk = sorted(p.stem for p in (DATA_DIR / "evidence").glob("*.yaml"))
-    assert sorted(u.id for u in units) == on_disk
-    assert len(units) >= 22  # migrated 17 + Figma/Ripple excavations
-
-    by_id = {u.id: u for u in units}
-    mcd = by_id["linkedin-mcdonalds"]
-    assert mcd.tier is Tier.PRIMARY
-    assert mcd.status is Status.CONFIRMED
-    assert "scim" in mcd.skills
-    # Excavated units land provisional + memory-tier (nothing auto-confirms);
-    # apple-ux-research is the standing example still awaiting Tony's
-    # confirmation. Do not pin units that later get confirmed (see CLAUDE.md:
-    # the corpus grows and its verifies get resolved — assert the mechanism,
-    # not per-unit status snapshots).
-    assert by_id["apple-ux-research"].status is Status.PROVISIONAL
-
-
-@pytest.mark.private_corpus
-def test_link_defaults_to_none_and_accepts_a_url(units: list[EvidenceUnit]) -> None:
-    # Optional public-artifact URL (repo, npm). Real data omits it -> None.
-    for unit in units:
-        assert unit.link is None
-    linked = EvidenceUnit(
-        id="u-linked",
-        role=None,
-        narrative="Shipped a thing.",
-        skills=["python"],
-        tier=Tier.PRIMARY,
-        status=Status.CONFIRMED,
-        link="https://github.com/ctonyperry/careerkit",
-    )
-    assert linked.link == "https://github.com/ctonyperry/careerkit"
-
-
-@pytest.mark.private_corpus
-def test_portfolio_units_have_no_role(units: list[EvidenceUnit]) -> None:
-    dice = next(u for u in units if u.id == "project-dice-game")
-    assert dice.role is None
-    assert dice.kind == "portfolio-project"
+from careerkit.models import EvidenceUnit
 
 
 def test_unit_skills_exist_in_alias_table(
@@ -88,7 +17,7 @@ def test_unit_skills_exist_in_alias_table(
 
 
 def test_shipped_declined_file_loads() -> None:
-    # Grows only by Tony's confirmation (first records: 2026-08-24). Assert
+    # Grows only by the author's confirmation (first records: 2026-08-24). Assert
     # the file parses and every record carries the required fields — never
     # pin the count (see CLAUDE.md: the corpus grows).
     records = load_declined(DATA_DIR / "declined.yaml")
@@ -108,7 +37,7 @@ def test_declined_records_parse(tmp_path: Path) -> None:
         "  - text: Never managed a Kubernetes cluster\n"
         "    skills: [infrastructure]\n"
         "    date: '2026'\n"
-        "    note: asked in the Figma run\n",
+        "    note: asked in an early run\n",
         encoding="utf-8",
     )
     records = load_declined(p)

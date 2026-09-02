@@ -43,7 +43,7 @@ def target_affinity(unit: EvidenceUnit, company: str | None) -> int:
     """1 when a unit is about the target company's own product.
 
     Relevance is skill-tag overlap, and tags cannot express "this evidence is
-    about the employer's product". For an Okta application the ranker cut the
+    about the employer's product". For an identity-vendor application the ranker cut the
     unit describing hands-on work inside customer Okta orgs, because its tags
     duplicated higher-ranked units (session-learnings, round 2, finding 4).
 
@@ -71,7 +71,7 @@ class LengthBudget(BaseModel):
     max_per_section: int
 
 
-# Calibrated against examples/figma-resume-FINAL: a dense one-page senior resume
+# Calibrated against a dense one-page senior resume that shipped
 # runs ~7-8 units, LinkedIn carrying the most. Two-page roughly doubles headroom.
 ONE_PAGE = LengthBudget(name="one-page", max_total_units=10, max_per_section=5)
 TWO_PAGE = LengthBudget(name="two-page", max_total_units=16, max_per_section=7)
@@ -120,8 +120,8 @@ def is_withheld(unit: EvidenceUnit) -> bool:
 
     A do_not_print entry usually protects a detail the surrounding unit can
     survive without (the doubted $10M figure sits in a metric, not the
-    McDonald's narrative). But when the protected phrase IS the narrative, as
-    with an artifact Tony is not ready to share, selecting the unit spends a
+    the franchise rollout narrative). But when the protected phrase IS the narrative, as
+    with an artifact the author is not ready to share, selecting the unit spends a
     slot the writer can never use and dangles it in front of them anyway.
     """
     return any(p.lower() in unit.narrative.lower() for p in unit.do_not_print if p.strip())

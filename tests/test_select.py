@@ -175,7 +175,7 @@ def test_target_affinity_is_off_without_a_company() -> None:
 
 
 def test_units_whose_substance_is_do_not_print_are_never_selected() -> None:
-    """An artifact Tony is not ready to share should not occupy a slot the
+    """An artifact the author is not ready to share should not occupy a slot the
     writer cannot use. A protected detail inside a larger unit is different:
     that unit still selects, and the linter guards the phrase."""
     jd = ParsedJD(

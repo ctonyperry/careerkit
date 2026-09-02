@@ -5,7 +5,7 @@ is the trust gate: before a specific resume prints, the human must own only the
 marks and [VERIFY]s THAT resume touches (not the whole corpus). This module
 computes that checklist deterministically from the selection that built the
 draft, plus a clean-lint requirement. It reports; it never flips confirmation
-itself. Tony is the trust gate; this is the gate's checklist.
+itself. The author is the trust gate; this is the gate's checklist.
 """
 
 from __future__ import annotations
@@ -86,7 +86,7 @@ def render_finalization(report: FinalizationReport) -> str:
     if report.is_ready:
         lines += [
             "READY. No provisional units, open [VERIFY]s, or lint blockers touch "
-            "this resume. Tony's final confirmation is the last step.",
+            "this resume. The author's final confirmation is the last step.",
             "",
         ]
         return "\n".join(lines)

@@ -62,14 +62,14 @@ well enough to trust.
 
 ## 4. Gates check form. Readers check meaning. Neither is optional.
 
-On the Okta package: lint 0, finalize READY, crosscheck 0, adversarial review
-7 blocking. On Moveworks: a style reviewer singled out "retry that knows a 429
+On one package: lint 0, finalize READY, crosscheck 0, adversarial review
+7 blocking. On the next: a style reviewer singled out "retry that knows a 429
 from a 404" as the most convincing detail on the page, and `citecheck` blocked
 it, because 404 appears nowhere in the evidence. A reader judging voice will
 reward a concrete-sounding fabrication precisely because it sounds concrete.
 
 **Rule:** no document reaches a person without both halves. And the drafter is
-never the only reader: a self-review of Moveworks found two things; the real
+never the only reader: a self-review of one package found two things; the real
 panel found a tenure window that did not reconcile with the spine and a
 recruiter who passed at the fold. Same text. The delta was method.
 
@@ -121,7 +121,7 @@ ratchet applies to the person holding it.
 
 "Purpose before parts" produced "Handled the cases that quietly lose data,
 because instrumentation nobody trusts gets switched off" within an hour, and
-Tony read it as promotional. The correction was one clause away from the rule
+the author read it as promotional. The correction was one clause away from the rule
 that caused it. It went into STYLE-GUIDE.md as a before/after table, because a
 sentence can be re-read to mean its own violation and a table cannot.
 
@@ -132,7 +132,7 @@ real document. If the pair does not exist yet, the rule is a hunch.
 
 Every automated check trusts the corpus. That is the right design and its cost
 is that the corpus's own errors are unreachable by tooling. What reached them:
-Tony reading the document and saying "I think technically my title was
+the author reading the document and saying "I think technically my title was
 Security Analyst." Nothing else could have.
 
 **Rule:** facts in the corpus carry who confirmed them and when. Bounds are

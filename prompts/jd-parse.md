@@ -10,14 +10,14 @@ as `<jd-name>-parsed.json`. Then run:
 - `requirements[].skills` may ONLY use canonical tags that exist under
   `aliases:` in `data/skills.yaml`. Do not invent tags.
 - JD language you cannot map to a canonical tag goes in `unknown_terms`.
-  Tony confirms each as a new alias (or dismisses it); never guess silently.
+  The author confirms each as a new alias (or dismisses it); never guess silently.
 - `title_to_mirror`: the closest honest mirror of the JD's title
   (e.g. JD "Solutions Consultant" + actual title "Technical Consultant"
   mirrors as "Technical Solutions Consultant").
-- `register` stays null. Tony picks register from a menu at write time;
+- `register` stays null. The author picks register from a menu at write time;
   it is never auto-classified.
 - Split the JD into one requirement per distinct want. Keep the JD's own
-  wording in `text`; the recovery question quotes it back to Tony.
+  wording in `text`; the recovery question quotes it back to the author.
 - `weight` is "required" or "preferred" per the JD's own framing.
 
 ## Shape
@@ -36,5 +36,5 @@ as `<jd-name>-parsed.json`. Then run:
 }
 ```
 
-A worked example: `tests/fixtures/figma-jd-parsed.json` (parses
-`examples/figma-jd.md`).
+A worked example: `examples/sample-corpus/jd/halcyon-solutions-engineer-parsed.json`
+(parses `examples/sample-corpus/jd/halcyon-solutions-engineer.md`).

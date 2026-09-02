@@ -27,7 +27,7 @@ from pathlib import Path
 import yaml
 
 # What counts as a bullet stating an outcome. Two corrections on 2026-08-25,
-# after the count was quoted at Tony as though it were a census:
+# after the count was quoted at the author as though it were a census:
 #   - \b\d{2,}\b matched bare four-digit YEARS, so the compressed "Earlier"
 #     line scored as a result on the strength of "1998". False positive.
 #   - Spelled-out figures were invisible, so "the contract went from six months

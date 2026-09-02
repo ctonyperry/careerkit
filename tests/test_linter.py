@@ -16,7 +16,7 @@ def _spine_with_education() -> Spine:
     spine = make_spine()
     spine.education = Education(
         items=[
-            "General Assembly accelerator, 2018",
+            "Certificate, Portland Community College, 2012",
             "CS and business coursework at Lane Community College",
         ]
     )
@@ -90,7 +90,7 @@ def test_education_hallucinated_credential_blocks() -> None:
 
 def test_education_verbatim_from_spine_passes() -> None:
     spine = _spine_with_education()
-    text = "## EDUCATION\nGeneral Assembly accelerator, 2018"
+    text = "## EDUCATION\nCertificate, Portland Community College, 2012"
     assert "education-not-in-spine" not in _rules(lint_resume(text, spine, []))
 
 
@@ -105,11 +105,11 @@ def test_rhythm_only_warns() -> None:
 def test_clean_resume_has_no_blockers() -> None:
     spine, units = _spine_with_education(), _units()
     text = (
-        "# Tony Perry\n"
+        "# Morgan Vale\n"
         "## EXPERIENCE\n"
         "- Delivered a $10M program reaching ~2M users.\n"
         "## EDUCATION\n"
-        "General Assembly accelerator, 2018\n"
+        "Certificate, Portland Community College, 2012\n"
     )
     assert not has_blockers(lint_resume(text, spine, units))
 
@@ -149,7 +149,7 @@ _MIRROR_SUMMARY = (
 
 
 def _summary_doc(summary: str) -> str:
-    header = "# Tony Perry\n\nt@example.com\n\n**Title**\n\n"
+    header = "# Morgan Vale\n\nt@example.com\n\n**Title**\n\n"
     return header + summary + "\n\n## Experience\n"
 
 
@@ -178,7 +178,7 @@ def test_bullets_may_echo_the_jd_freely() -> None:
     # Only the summary is checked. Bullets SHOULD share the JD's domain
     # vocabulary; they were selected against it.
     doc = (
-        "# Tony Perry\n\n**Title**\n\n## Experience\n\n"
+        "# Morgan Vale\n\n**Title**\n\n## Experience\n\n"
         "- Led technical discovery for customer deployments, guiding engineering "
         "teams from integration design through production rollout at enterprise "
         "scale, tracing failures to root cause.\n"
@@ -255,9 +255,9 @@ def test_tenure_ignores_ordinary_year_mentions() -> None:
 
 
 def test_doubted_metric_no_longer_legitimises_a_number() -> None:
-    """Confirmation and doubt are symmetric. When Tony stops standing behind a
+    """Confirmation and doubt are symmetric. When the author stops standing behind a
     figure it must stop sourcing that number, not merely fail to be promoted.
-    The $10M McDonald's figure went this way on 2026-08-25."""
+    The $10M franchise-rollout figure went this way on 2026-08-25."""
     spine = make_spine()
     unit = EvidenceUnit(
         id="m",
@@ -281,7 +281,7 @@ def test_doubted_metric_no_longer_legitimises_a_number() -> None:
 
 def test_do_not_print_blocks_regardless_of_coverage() -> None:
     """Some things are true, sourced, relevant, and still must not be sent: a
-    figure Tony no longer trusts, an artifact he is not ready to share."""
+    figure the author no longer trusts, an artifact he is not ready to share."""
     spine = make_spine()
     unit = EvidenceUnit(
         id="kit",

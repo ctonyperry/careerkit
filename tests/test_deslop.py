@@ -11,8 +11,8 @@ def test_em_dash_becomes_a_comma() -> None:
 
 
 def test_em_dash_separator_in_a_label_line() -> None:
-    cleaned, _ = deslop_text("Accelerator — General Assembly (Cognizant), 2018")
-    assert cleaned == "Accelerator, General Assembly (Cognizant), 2018"
+    cleaned, _ = deslop_text("Certificate — Portland Community College, 2012")
+    assert cleaned == "Certificate, Portland Community College, 2012"
 
 
 def test_pass_never_merges_lines() -> None:

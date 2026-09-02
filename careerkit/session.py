@@ -1,7 +1,7 @@
 """Persist a web-UI excavation session into the corpus.
 
 The web UI never writes career data directly (a red-team rule: writes go through
-validated Python, and Tony reviews what lands). A session is the UI's output:
+validated Python, and the author reviews what lands). A session is the UI's output:
 cards the user placed (four-beat answers) and wants they declined. This module
 turns them into provisional evidence units and declined records on disk.
 

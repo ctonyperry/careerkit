@@ -199,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
         "--length", default="one-page", choices=sorted(BUDGETS), help="length budget"
     )
     resume.add_argument(
-        "--register", default=None, help="register/voice choice (Tony picks; never auto)"
+        "--register", default=None, help="register/voice choice (The author picks; never auto)"
     )
     resume.add_argument(
         "--education-placement",

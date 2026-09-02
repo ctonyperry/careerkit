@@ -28,7 +28,7 @@ class Status(StrEnum):
 class Metric(BaseModel):
     value: str
     tier: Tier
-    # Confirmation and doubt are symmetric. When Tony stops standing behind a
+    # Confirmation and doubt are symmetric. When the author stops standing behind a
     # figure, it must stop legitimising that number in a draft, not merely fail
     # to be promoted. A doubted metric is excluded from the linter's allowed set,
     # so printing it blocks as number-without-source.
@@ -75,7 +75,7 @@ class EvidenceUnit(BaseModel):
     # artifacts are the non-traditional candidate's substitute for credentials.
     link: str | None = None
     # When and by whom this unit was last stood behind. Prose notes carried
-    # "Tony-confirmed 2026-08-25" on thirty-two units and nothing could ask
+    # "author-confirmed 2026-08-25" on thirty-two units and nothing could ask
     # "what has not been re-confirmed in a year?". A MEMORY-tier fact decays;
     # this is how the corpus shows its age. See SPINE-SPEC.md.
     confirmed_on: str | None = None
@@ -93,14 +93,14 @@ class EvidenceUnit(BaseModel):
 
     _norm_confirmed_on = field_validator("confirmed_on", mode="before")(_iso)
     # Literal strings that must never reach a sent document, whatever the
-    # coverage maths says: a figure Tony no longer trusts, an artifact he is not
+    # coverage maths says: a figure the author no longer trusts, an artifact he is not
     # ready to share, a customer name that stays generic. Render notes carry the
     # reasoning; this carries the enforcement.
     do_not_print: list[str] = Field(default_factory=list)
 
 
 class DeclinedRecord(BaseModel):
-    """Negative evidence: something Tony confirmed he has NOT done.
+    """Negative evidence: something the author confirmed he has NOT done.
 
     Feeds DECLINED coverage — the skill is never re-asked and drives a
     poor-fit strategy note instead of a recovery question.

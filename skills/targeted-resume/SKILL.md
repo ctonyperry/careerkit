@@ -32,7 +32,7 @@ contradicted the spine, all in one afternoon.
 2. **Never paraphrase a JD from memory.** Any sentence referring to the target
    company or posting must quote the JD file in `jd-inbox/`. Facts about the
    company from outside the JD (news, docs) require a cited source shown to
-   the user. This is the rule that the Okta-to-Cash-App bleed broke.
+   the user. This is the rule that the cross-posting bleed broke.
 3. **Dates, titles, tenure, and education render from the spine**, never from
    recall. The visible window is fifteen years (the user's decision, 2026-08-26):
    no total-career tenure figure, no dated role older than that, older roles

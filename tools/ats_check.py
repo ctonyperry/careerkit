@@ -107,7 +107,7 @@ def _searchable_terms(parsed: dict) -> list[str]:
 
     Read from the PARSED requirements and unknown_terms, never the raw posting.
     The first version scanned the whole JD and dutifully reported that the
-    resume was missing "Intelligems", "Ventures" and "Fred", which come from
+    resume was missing the company name and two names from the posting's own team, which come from
     the About-the-company section and the investor list. Nobody searches a
     candidate pipeline for the founder's first name. Requirements are where the
     hiring criteria live, so that is the only text worth scanning.

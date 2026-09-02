@@ -5,9 +5,9 @@ selection, so a unit added as a deliberate CP2 override is invisible to it.
 `crosscheck` compares documents against the JD and against each other. Neither
 one opens the cited evidence and asks whether the sentence is actually in there.
 
-Both escapes had the same shape. Edia claimed React at Apple: true, Tony-
+Both escapes had the same shape. One package claimed React at Apple: true, author-
 confirmed, and recorded on `javascript-frameworks` rather than on
-`apple-xapi-library` where the claim sat. Moveworks claimed SME on APIs
+`apple-xapi-library` where the claim sat. Another claimed SME on APIs
 "their engineering teams built against": true, and resting on a provisional
 unit that was not in the selection. To anyone holding the corpus in their head
 both read as supported. To a verifier reading only the cited unit, both read as

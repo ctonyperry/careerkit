@@ -17,8 +17,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install -e ".[dev]"
-      # The contract tests, on the fictional sample corpus. Historical tests
-      # written against the original author's record skip here by design.
+      # The whole suite runs on the fictional sample corpus. Tests about one
+      # person's record live with that record, not here.
       - run: python -m pytest -q
       # Every defect on record is replayed against the live gates. The number
       # that must not move is "no longer caught: 0".

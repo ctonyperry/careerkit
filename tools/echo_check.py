@@ -66,7 +66,7 @@ def _split(resume: str) -> tuple[list[str], list[str]]:
     evidence: the tagline, the summary, role headings and italic subtitles."""
     furniture, bullets = [], []
     # The skills line and education block are deliberately redundant with the
-    # bullets: Tony calls the skills line keyword insurance, and it is there to
+    # bullets: the author calls the skills line keyword insurance, and it is there to
     # be searched, not read. Counting their echoes would flag the one repetition
     # that is doing its job.
     skip = False

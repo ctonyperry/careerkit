@@ -154,7 +154,7 @@ def check(run: Path) -> list[Finding]:
             f"vertical scan reads the left edge: "
             + "; ".join(b[:44] for b in weak[:3])))
 
-    # --- Age signal. Tony, 2026-08-26: "I thought we had something in place to
+    # --- Age signal. The author, 2026-08-26: "I thought we had something in place to
     # catch obvious tells of my age?" There was not. Worse, the canonical
     # summary opener MANDATES one. This does not decide the policy; it counts
     # what a reader can compute. Any year more than fifteen back, and any
