@@ -50,6 +50,8 @@ def test_pending_lists_only_pending(tmp_path: Path) -> None:
     p, _ = write_capture(tmp_path, {"company": "B", "role": "TA", "text": "y"}, today=TODAY)
     p.write_text(p.read_text(encoding="utf-8").replace("status: pending", "status: drafted"),
                  encoding="utf-8")
+    # A report dropped into the inbox is not a posting, table dashes or not.
+    (tmp_path / "TRIAGE.md").write_text("| a | b |\n|---|---|\n| 1 | 2 |\n", encoding="utf-8")
     assert [c for _, c, _ in pending(tmp_path)] == ["A"]
 
 

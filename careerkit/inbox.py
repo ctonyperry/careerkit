@@ -86,7 +86,12 @@ def pending(inbox: Path) -> list[tuple[str, str, str]]:
     """(file, company, role) for every inbox file whose status is pending."""
     out = []
     for p in sorted(inbox.glob("*.md")):
-        head = p.read_text(encoding="utf-8").split("---", 2)
+        text = p.read_text(encoding="utf-8")
+        # Only a file that opens with frontmatter is a posting. A markdown
+        # table's "|---|" once made a triage report look like a pending JD.
+        if not text.startswith("---"):
+            continue
+        head = text.split("---", 2)
         if len(head) < 3:
             continue
         fields = dict(
