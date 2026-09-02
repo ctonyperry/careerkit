@@ -42,7 +42,7 @@ def test_triage_ranks_verdicts_first_then_invalid_then_unparsed(tmp_path: Path) 
 
 def test_render_names_the_parse_queue(tmp_path: Path) -> None:
     md = render(build_triage(_inbox(tmp_path), DATA))
-    assert "| 1 | Halcyon Robotics | Solutions Engineer | **apply** | 3/1/0/0 |" in md
+    assert "| 1 | Halcyon Robotics | Solutions Engineer | **apply** | 3/1/0/0 | 0 |" in md
     assert "tags not in skills.yaml: quantum-sso" in md
     assert "Parse next" in md and "2026-09-03-unparsed-se.md" in md
     assert "1 apply, 1 parse-invalid, 1 unparsed." in md

@@ -44,6 +44,26 @@ def test_a_required_miss_means_name_the_gap() -> None:
     assert "Rust" in v.name_in_the_letter[0] and "nothing in the record" in v.name_in_the_letter[0]
 
 
+def test_unmapped_required_wants_never_count_as_hits() -> None:
+    """The coverage engine scores an empty skills list as HIT. On the first
+    real inbox that made a posting with twenty unmapped terms read 10/0/0/0."""
+    units, spine, declined = _corpus()
+    reqs = [Requirement(id="a", text="Hands-on SSO", skills=["sso"], weight="required"),
+            Requirement(id="b", text="Deep OpenTelemetry experience", skills=[], weight="required"),
+            Requirement(id="c", text="Refinery sampling", skills=[], weight="required"),
+            Requirement(id="d", text="Go", skills=[], weight="preferred")]
+    jd = ParsedJD(source="x", title_to_mirror="T", role_family="f", seniority="s",
+                  requirements=reqs)
+    v = build_verdict(jd, units, spine, declined)
+    assert v.required_counts["HIT"] == 1 and sum(v.required_counts.values()) == 1
+    assert v.unmapped_required == ["Deep OpenTelemetry experience", "Refinery sampling"]
+    assert v.unmapped_preferred == ["Go"]
+    assert v.recommendation == "unmapped"  # two unmapped outnumber one hit
+    md = render(v)
+    assert "plus 2 the parse could not map" in md
+    assert "## Required, and the record has no tag for it" in md
+
+
 def test_a_stated_credential_without_equivalence_is_a_hard_gate() -> None:
     units, spine, declined = _corpus()
     jd = ParsedJD(source="x", title_to_mirror="T", role_family="f", seniority="s",

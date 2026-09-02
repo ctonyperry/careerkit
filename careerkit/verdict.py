@@ -22,7 +22,7 @@ from careerkit.jd import ParsedJD
 from careerkit.models import DeclinedRecord, EvidenceUnit, Spine
 from careerkit.strategy import strategy_notes, tenure_findings
 
-Recommendation = Literal["apply", "name-the-gap", "hard-gate"]
+Recommendation = Literal["apply", "name-the-gap", "unmapped", "hard-gate"]
 
 
 class Verdict(BaseModel):
@@ -32,6 +32,12 @@ class Verdict(BaseModel):
     recommendation: Recommendation
     required_counts: dict[str, int] = Field(default_factory=dict)
     preferred_counts: dict[str, int] = Field(default_factory=dict)
+    # Wants the parse could not map to any tag. The coverage engine scores
+    # an empty skills list as HIT, which on the first real inbox turned a
+    # posting with twenty unmapped terms into 10/0/0/0. These are neither
+    # covered nor missing until the alias table says which.
+    unmapped_required: list[str] = Field(default_factory=list)
+    unmapped_preferred: list[str] = Field(default_factory=list)
     hard_gates: list[str] = Field(default_factory=list)
     tenure: list[str] = Field(default_factory=list)
     credentials: list[str] = Field(default_factory=list)
@@ -73,8 +79,14 @@ def build_verdict(
     coverages = assess_jd(jd, units, spine, declined)
 
     capability = [c for c in coverages if c.requirement.kind == "capability"]
-    required = [c for c in capability if c.requirement.weight == "required"]
-    preferred = [c for c in capability if c.requirement.weight == "preferred"]
+    mapped = [c for c in capability if c.requirement.skills]
+    unmapped = [c for c in capability if not c.requirement.skills]
+    required = [c for c in mapped if c.requirement.weight == "required"]
+    preferred = [c for c in mapped if c.requirement.weight == "preferred"]
+    unmapped_required = [c.requirement.text for c in unmapped
+                         if c.requirement.weight == "required"]
+    unmapped_preferred = [c.requirement.text for c in unmapped
+                          if c.requirement.weight != "required"]
 
     weight = {c.requirement.id: c.requirement.weight for c in coverages}
     hard_gates: list[str] = []
@@ -102,10 +114,15 @@ def build_verdict(
     say_no = [_weak_detail(c, declined_text) for c in preferred
               if c.status is CoverageStatus.DECLINED]
 
+    hits = sum(1 for c in required if c.status is CoverageStatus.HIT)
     if hard_gates:
         rec: Recommendation = "hard-gate"
     elif name:
         rec = "name-the-gap"
+    elif len(unmapped_required) > hits:
+        # More of what is required went unmapped than was answered. The
+        # honest call is not "apply"; it is "map these first, then look".
+        rec = "unmapped"
     else:
         rec = "apply"
 
@@ -116,6 +133,8 @@ def build_verdict(
         recommendation=rec,
         required_counts=_counts(required),
         preferred_counts=_counts(preferred),
+        unmapped_required=unmapped_required,
+        unmapped_preferred=unmapped_preferred,
         hard_gates=hard_gates,
         tenure=tenure_lines,
         credentials=credentials,
@@ -133,6 +152,10 @@ _HEADLINE = {
         "The posting states a gate you do not meet. Applying means applying past it, "
         "and no document should argue it."
     ),
+    "unmapped": (
+        "More of what is required went unmapped than was answered. Add the aliases, "
+        "or accept those wants as gaps, before reading the coverage."
+    ),
 }
 
 
@@ -143,9 +166,13 @@ def _fmt_counts(counts: dict[str, int]) -> str:
 def render(v: Verdict) -> str:
     where = f" at {v.company}" if v.company else ""
     out = [f"# Verdict: {v.title}{where}", "", f"**{_HEADLINE[v.recommendation]}**", ""]
-    out.append(f"Required capabilities: {_fmt_counts(v.required_counts) or 'none'}.")
-    if any(v.preferred_counts.values()):
-        out.append(f"Preferred: {_fmt_counts(v.preferred_counts)}.")
+    out.append(f"Required capabilities: {_fmt_counts(v.required_counts) or 'none'}"
+               + (f", plus {len(v.unmapped_required)} the parse could not map"
+                  if v.unmapped_required else "") + ".")
+    if any(v.preferred_counts.values()) or v.unmapped_preferred:
+        out.append(f"Preferred: {_fmt_counts(v.preferred_counts) or 'none'}"
+                   + (f", plus {len(v.unmapped_preferred)} unmapped"
+                      if v.unmapped_preferred else "") + ".")
     for t in v.tenure:
         out.append(f"Tenure: {t}")
     for c in v.credentials:
@@ -153,6 +180,9 @@ def render(v: Verdict) -> str:
     out.append("")
     if v.hard_gates:
         out += ["## The gate", ""] + [f"- {g}" for g in v.hard_gates] + [""]
+    if v.unmapped_required:
+        out += ["## Required, and the record has no tag for it", ""]
+        out += [f"- {g}" for g in v.unmapped_required] + [""]
     if v.name_in_the_letter:
         out += ["## Name in the letter", ""] + [f"- {g}" for g in v.name_in_the_letter] + [""]
     if v.expect_probing:

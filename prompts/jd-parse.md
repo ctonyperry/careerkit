@@ -26,6 +26,15 @@ as `<jd-name>-parsed.json`. Then run:
   spine, never asked). Mark a want as credential ONLY when it names a degree
   or certification. An experience want with "years" in it is tenure.
 - `company` is the employer named in the posting, verbatim.
+- A want with no mappable tag is still a requirement when it is skill-shaped
+  ("OpenTelemetry", "FedRAMP", "quote-to-cash"): keep it, with an empty
+  `skills` list, and put the wording in `unknown_terms`. The verdict reports
+  these as unmapped rather than counting them as covered.
+- Pure dispositions and logistics are NOT requirements: "high ownership",
+  "comfort with ambiguity", "excellent communication", "travel up to 25%",
+  mission statements. Nothing in a record can evidence them and they would
+  only pad the unmapped count. Leave them out of `requirements` and out of
+  `unknown_terms`.
 - Every tag is checked: `careerkit triage` marks a parse invalid if any
   skill is not in `skills.yaml`, and it never reaches a verdict.
 

@@ -28,7 +28,8 @@ from careerkit.dataload import (
 from careerkit.inbox import pending
 from careerkit.verdict import Verdict, build_verdict
 
-_ORDER = {"apply": 0, "name-the-gap": 1, "hard-gate": 2, "parse-invalid": 3, "unparsed": 4}
+_ORDER = {"apply": 0, "name-the-gap": 1, "unmapped": 2, "hard-gate": 3, "parse-invalid": 4,
+          "unparsed": 5}
 
 
 class TriageRow(BaseModel):
@@ -80,12 +81,20 @@ def build_triage(inbox: Path, data_dir: Path) -> Triage:
         v = build_verdict(load_parsed_jd(pp), units, spine, declined)
         rows.append(TriageRow(file=name, company=company, role=role, state=v.recommendation,
                               parsed=pp.name, verdict=v))
-    rows.sort(key=lambda r: (r.rank, -_hits(r), r.file))
+    rows.sort(key=lambda r: (r.rank, -_hits(r), _unmapped(r), r.file))
     return Triage(rows=rows)
 
 
 def _hits(row: TriageRow) -> int:
     return row.verdict.required_counts.get("HIT", 0) if row.verdict else 0
+
+
+def _unmapped(row: TriageRow) -> int:
+    return len(row.verdict.unmapped_required) if row.verdict else 0
+
+
+def _cell(text: str) -> str:
+    return text.replace("|", "/")
 
 
 def _req(v: Verdict) -> str:
@@ -96,20 +105,20 @@ def _req(v: Verdict) -> str:
 def render(t: Triage) -> str:
     if not t.rows:
         return "Nothing pending.\n"
-    out = ["| # | Company | Role | Verdict | Required HIT/THIN/MISS/DECL | Gate or gap "
-           "| Unmapped |",
-           "|---|---|---|---|---|---|---|"]
+    out = ["| # | Company | Role | Verdict | Required HIT/THIN/MISS/DECL | Required unmapped "
+           "| Gate or gap | Terms unmapped |",
+           "|---|---|---|---|---|---|---|---|"]
     for i, r in enumerate(t.rows, 1):
         if r.verdict:
             v = r.verdict
             gate = "; ".join(v.hard_gates or v.name_in_the_letter)[:90]
-            out.append(f"| {i} | {r.company} | {r.role} | **{r.state}** | {_req(v)} | {gate} | "
-                       f"{len(v.unknown_terms)} |")
+            out.append(f"| {i} | {_cell(r.company)} | {_cell(r.role)} | **{r.state}** | {_req(v)} "
+                       f"| {len(v.unmapped_required)} | {_cell(gate)} | {len(v.unknown_terms)} |")
         elif r.state == "parse-invalid":
-            out.append(f"| {i} | {r.company} | {r.role} | parse-invalid | | "
+            out.append(f"| {i} | {_cell(r.company)} | {_cell(r.role)} | parse-invalid | | | "
                        f"tags not in skills.yaml: {', '.join(r.bad_tags)} | |")
         else:
-            out.append(f"| {i} | {r.company} | {r.role} | unparsed | | | |")
+            out.append(f"| {i} | {_cell(r.company)} | {_cell(r.role)} | unparsed | | | | |")
     out.append("")
     counts: dict[str, int] = {}
     for r in t.rows:
