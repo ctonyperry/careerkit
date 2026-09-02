@@ -57,6 +57,35 @@ def _frontmatter(fields: dict[str, str]) -> str:
     return "\n".join(lines) + "\n\n"
 
 
+_PAGE_FOOTER = "LinkedIn Corporation"
+_FURNITURE_PREFIXES = ("Get job alerts",)
+
+
+def trim_search_page(text: str) -> str:
+    """Cut a LinkedIn search-results page down to the posting pane.
+
+    Twenty captures in a row arrived as the whole search page: hundreds of
+    lines of other postings, then the site footer, then the posting that was
+    clicked. The pane selectors in the bookmarklet did not hold against the
+    live layout, and a hand trim did the same thing every time: keep what
+    follows the last site footer before "About the job". Deterministic,
+    independent of any CSS class, and a no-op on a page that is already the
+    posting.
+    """
+    lines = text.splitlines()
+    about = next((i for i, ln in enumerate(lines) if ln.strip() == "About the job"), None)
+    if about is None:
+        return text
+    anchors = [i for i in range(about) if _PAGE_FOOTER in lines[i]]
+    if not anchors:
+        return text
+    start = anchors[-1] + 1
+    while start < about and (not lines[start].strip()
+                             or lines[start].strip().startswith(_FURNITURE_PREFIXES)):
+        start += 1
+    return "\n".join(lines[start:])
+
+
 def write_capture(inbox: Path, capture: dict, today: dt.date | None = None) -> tuple[Path, bool]:
     """Write one capture. Returns (path, written). Never overwrites: a repost
     is a decision for the person, not the button."""
@@ -64,7 +93,7 @@ def write_capture(inbox: Path, capture: dict, today: dt.date | None = None) -> t
     today = today or dt.date.today()
     company = str(capture.get("company") or "unknown-company").strip()
     role = str(capture.get("role") or "untitled").strip()
-    text = str(capture.get("text") or "").strip()
+    text = trim_search_page(str(capture.get("text") or "")).strip()
     if not text:
         raise ValueError("empty capture: no page text arrived")
     path = inbox / f"{today.isoformat()}-{slug(company)}-{slug(role)}.md"

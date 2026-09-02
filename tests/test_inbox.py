@@ -11,7 +11,15 @@ from pathlib import Path
 
 import pytest
 
-from careerkit.inbox import _Handler, bookmarklet, install_page, pending, slug, write_capture
+from careerkit.inbox import (
+    _Handler,
+    bookmarklet,
+    install_page,
+    pending,
+    slug,
+    trim_search_page,
+    write_capture,
+)
 
 TODAY = dt.date(2026, 9, 2)
 
@@ -98,3 +106,24 @@ def test_receiver_round_trip(tmp_path: Path) -> None:
 def test_install_page_escapes_the_bookmarklet() -> None:
     page = install_page(Path("nowhere"), 8765)
     assert 'href="javascript:' in page and "&quot;" in page
+
+
+def test_search_page_capture_is_cut_to_the_posting_pane(tmp_path: Path) -> None:
+    """Twenty captures arrived as the whole search page. The posting is what
+    follows the last site footer before "About the job"."""
+    page = "\n".join([
+        "Jobs based on your preferences", "Other Co", "Some Other Role", "Apply",
+        "LinkedIn Corporation (c) 2026", "", "Get job alerts for this search", "Halcyon Robotics",
+        "Solutions Engineer", "San Francisco", "Apply", "Save", "About the job", "The posting body.",
+    ])
+    cut = trim_search_page(page)
+    assert cut.startswith("Halcyon Robotics\nSolutions Engineer")
+    assert "Other Co" not in cut and "Get job alerts" not in cut
+    assert cut.endswith("The posting body.")
+    plain = "Halcyon Robotics\nAbout the job\nThe posting body."
+    assert trim_search_page(plain) == plain  # already the posting: untouched
+    assert trim_search_page("no about section at all") == "no about section at all"
+    path, _ = write_capture(tmp_path, {"company": "Halcyon", "role": "SE", "text": page},
+                            today=TODAY)
+    body = path.read_text(encoding="utf-8").split("---\n\n", 1)[1]
+    assert body.startswith("Halcyon Robotics")
