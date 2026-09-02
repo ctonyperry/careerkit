@@ -210,7 +210,15 @@ Claude Desktop, add it to `claude_desktop_config.json`:
 }
 ```
 
-Then ask the chat to walk you through the terms queue; it calls
+Claude Desktop keeps its own copy of that list and writes it over the file
+when it quits, so an edit made while the app is running is lost. Quit the app
+completely, then let the script do it:
+
+```bash
+python tools/desktop_config.py --corpus /path/to/your/corpus --runs /path/to/your/runs
+```
+
+Then start the app and ask the chat to walk you through the terms queue; it calls
 `terms_queue`, you answer in your words, it calls `terms_decide` with your
 note. The decisions land in `terms.yaml` and the next triage reflects them.
 
