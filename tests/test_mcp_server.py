@@ -75,3 +75,18 @@ def test_server_relays_a_missing_env_as_text(monkeypatch: pytest.MonkeyPatch) ->
     result = asyncio.run(server.call_tool("inbox_pending", {}))
     text = result[0].text if isinstance(result, list) else str(result)
     assert "CAREERKIT_RUNS" in text
+
+
+def test_tags_list_is_the_closed_vocabulary_and_bad_tags_point_back_at_it(runs: Path) -> None:
+    """The chat once offered invented tags, then unit ids. It had no way to see
+    the vocabulary, and the refusal did not say where to look."""
+    listing = srv.tags_list()
+    assert listing.startswith("5") or listing[0].isdigit()  # "<n> tags ..."
+    assert "telemetry" in listing and "sso  (" in listing
+    narrowed = srv.tags_list("provision")
+    assert "scim" in narrowed and "\ntelemetry" not in narrowed
+    refusal = srv.terms_decide("leading projects", "alias", tag="technical-leadership")
+    assert "Not recorded" in refusal and "tags_list" in refusal
+    assert "Nearest by name" in refusal and "technical-writing" in refusal
+    unit_as_tag = srv.terms_decide("leading projects", "alias", tag="lantern-sso-rollouts")
+    assert "Not recorded" in unit_as_tag

@@ -34,7 +34,12 @@ INSTRUCTIONS = """careerkit: an evidence-grounded resume pipeline. The corpus is
 own record, confirmed by them. Never invent a fact about the person. A term
 decision (alias, gap, ignore) is the person's call: ask, then record what
 they said in their words. Verdicts and triage are arithmetic over the record;
-whether the person wants the job stays with them."""
+whether the person wants the job stays with them.
+
+Tags are a closed vocabulary: call tags_list before offering any alias, and
+offer only tags it returns. Evidence unit ids (from stale_units or a prep
+sheet) are not tags. An alias points a posting's phrase at one existing tag;
+which unit backs the tag is the record's business, not the alias's."""
 
 
 def _data_dir() -> Path:
@@ -109,19 +114,57 @@ def terms_queue(limit: int = 40, required_only: bool = False) -> str:
     return text
 
 
+def tags_list(query: str = "") -> str:
+    """The closed vocabulary an alias may point at: every tag in skills.yaml
+    with the posting phrases already mapped to it, and how many evidence units
+    carry it. query narrows to tags or phrases containing the text. Offer the
+    person only tags from this list; never invent one."""
+    from careerkit.terms import _norm
+
+    data = _data_dir()
+    aliases = load_aliases(data / "skills.yaml")
+    carried: dict[str, int] = {}
+    for u in load_units(data / "evidence"):
+        for s in u.skills:
+            carried[s] = carried.get(s, 0) + 1
+    by_tag: dict[str, list[str]] = {t: [] for t in aliases.canonical_tags}
+    for phrase, tag in aliases.phrases.items():
+        if phrase != tag and tag in by_tag:
+            by_tag[tag].append(phrase)
+    q = _norm(query)
+    rows = []
+    for tag in sorted(by_tag):
+        phrases = by_tag[tag]
+        if q and q not in tag and not any(q in p for p in phrases):
+            continue
+        n = carried.get(tag, 0)
+        rows.append(f"{tag}  ({n} unit{'s' if n != 1 else ''})  {', '.join(phrases)}")
+    head = f"{len(rows)} tags" + (f" matching {query!r}" if query else "")
+    return head + ". A tag with 0 units is real but nothing in the record carries it yet.\n" + \
+        "\n".join(rows)
+
+
 def terms_decide(term: str, decision: str, tag: str | None = None, note: str = "") -> str:
-    """Record the person's decision on one term. decision is alias (with tag),
-    gap, or ignore. note is their reason in their words. Never decide for them."""
-    from careerkit.terms import TermDecision, record
+    """Record the person's decision on one term. decision is alias (with a tag
+    from tags_list), gap, or ignore. note is their reason in their words.
+    Never decide for them."""
+    from careerkit.terms import TermDecision, record, suggest_tag
 
     if decision not in ("alias", "gap", "ignore"):
         return "decision must be alias, gap or ignore"
     data = _data_dir()
     if decision == "alias":
+        aliases = load_aliases(data / "skills.yaml")
         if not tag:
-            return "an alias needs the tag it maps to"
-        if tag not in load_aliases(data / "skills.yaml").canonical_tags:
-            return f"{tag!r} is not a tag in skills.yaml; an alias can only point at one"
+            return "an alias needs the tag it maps to; call tags_list for the vocabulary"
+        if tag not in aliases.canonical_tags:
+            near = [t for t in sorted(aliases.canonical_tags)
+                    if any(w in t for w in tag.lower().replace("_", "-").split("-") if len(w) > 3)]
+            hint = suggest_tag(term, aliases)
+            return (f"{tag!r} is not a tag in skills.yaml; an alias can only point at one. "
+                    f"Not recorded. Tags are a closed vocabulary (call tags_list). "
+                    + (f"Nearest by name: {', '.join(near[:6])}. " if near else "")
+                    + (f"The term itself suggests {hint!r}. " if hint else ""))
     try:
         record(data / "terms.yaml", TermDecision(term=term, decision=decision, tag=tag, note=note))
     except ValueError as exc:
@@ -151,7 +194,7 @@ def stale_units(older_than_days: int | None = None) -> str:
     return render(_stale(load_units(_data_dir() / "evidence"), older_than_days=older_than_days))
 
 
-TOOLS = [inbox_pending, triage_table, verdict_for, terms_queue, terms_decide,
+TOOLS = [inbox_pending, triage_table, verdict_for, tags_list, terms_queue, terms_decide,
          prep_sheet, outcomes_table, stale_units]
 
 
