@@ -42,6 +42,7 @@ stderr.
 
 ## The pipeline, on a run directory
 
+    python -m careerkit.cli verdict --jd <jd-parsed.json>   # first, before drafting
     python -m careerkit.cli lint <resume.md> --jd <jd-parsed.json>
     python -m careerkit.cli finalize <resume.md> --jd <jd-parsed.json>
     python tools/citecheck.py     <run>   # every claim traces to its cited unit
@@ -54,6 +55,7 @@ stderr.
     python tools/regress.py               # every recorded defect still caught
     python tools/panel.py         <run>   # reviewer packets, then run the panel
     python -m careerkit.cli prep --run <run>   # after sign-off: the night-before sheet
+    python -m careerkit.cli outcomes           # every run: status, sent, what came back
 
 Gates check form. Only a reader holding the corpus checks meaning. Both halves
 run before anything is sent, and the drafter is never the only reader.

@@ -42,8 +42,15 @@ git clone https://github.com/ctonyperry/careerkit && cd careerkit
 python -m pip install -e ".[dev]"
 ```
 
-Gap analysis against a posting: what the record covers, what it does not,
-what to ask the person, and what is a poor fit by their own admission.
+The verdict first. Apply, apply and name the gap, or a gate you do not meet,
+with the arithmetic under it.
+
+```bash
+python -m careerkit.cli verdict --jd examples/sample-run/jd-parsed.json
+```
+
+Then the gap analysis: what the record covers, what it does not, what to ask
+the person, and what is a poor fit by their own admission.
 
 ```bash
 python -m careerkit.cli gap --jd examples/sample-run/jd-parsed.json --out gap-report.md
@@ -77,11 +84,13 @@ The number that must not move is `no longer caught: 0`.
 
 | Part | What it does | What it cannot see |
 |---|---|---|
+| `careerkit verdict` | The fit call, computed before any drafting: required capabilities by status, tenure from the timeline, a stated credential with or without an equivalence clause, and one of three answers: apply, apply and name the gap, or a gate you do not meet. | Whether you want the job, and whether a HIT is the story worth telling. |
 | `careerkit gap` | Coverage per requirement: HIT, THIN, MISS, DECLINED. Recovery questions for the gaps. Tenure computed from the timeline, never typed. | Whether a HIT is the right story to tell. |
 | `careerkit resume` | Selects units under a length budget and writes the brief the LLM drafts from. Provisional evidence makes the brief a DRAFT. | Prose quality. It writes no prose. |
 | `careerkit lint` | Em dashes, self-rating, self-casting, scale boasts, numbers with no source, education not in the spine, phrases marked never-print. | A real fact omitted. |
 | `careerkit finalize` | Provisional units and open verify items on the selection. | An override the writer made after the selection. |
 | `careerkit prep` | The night-before sheet for a run: every cited unit with the bounds you set on it, the figures you doubt, what is still marked verify, and the requirements where the questions will land, with your own declined answer where you have one. | A probe about something the page does not claim. |
+| `careerkit outcomes` | Every run in one table: captured, status, sent, and what came back, with your own notes on why. | Why, until you write it down. |
 | `careerkit stale` | What in the record has not been re-confirmed, oldest and weakest first. | Whether a fact went stale without anyone noticing. |
 | `tools/citecheck.py` | Every distinctive term in every bullet must appear in the unit that bullet cites. | A bullet that misrepresents a unit using only that unit's own words. |
 | `tools/crosscheck.py` | Spine tense, drift between documents in a run, sentences about the company that do not quote the posting, references to a bullet that is no longer there. | Semantic contamination that shares no words. |
@@ -109,12 +118,17 @@ The corpus is three files and a directory:
   note instead.
 - `data/skills.yaml`, the alias table that maps posting language to your tags.
 
-Copy `examples/sample-corpus` somewhere private, replace every line, and point
-at it:
+Start from the fictional one, replace every line, and point at it:
 
 ```bash
+python -m careerkit.cli init /path/to/your/corpus
 export CAREERKIT_CORPUS=/path/to/your/corpus
 ```
+
+Runs live wherever you like, one directory per application with a
+`manifest.yaml`. Set `CAREERKIT_RUNS` to that directory and `careerkit
+outcomes` tabulates them: what went out, what came back, and your notes on
+why. That table is the record that outlives the search.
 
 `docs/SPINE-SPEC.md` covers how a record grows and ages across applications
 and career changes. `docs/STYLE-GUIDE.md` holds every writing rule with the

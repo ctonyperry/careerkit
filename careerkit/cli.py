@@ -117,6 +117,55 @@ def _cmd_ingest_session(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_verdict(args: argparse.Namespace) -> int:
+    from careerkit.verdict import build_verdict, render
+
+    data_dir = _data_dir(args)
+    jd = load_parsed_jd(Path(args.jd))
+    v = build_verdict(jd, load_units(data_dir / "evidence"), load_spine(data_dir / "spine.yaml"),
+                      load_declined(data_dir / "declined.yaml"))
+    text = render(v)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+        print(f"Wrote {args.out} ({v.recommendation})")
+    else:
+        print(text)
+    return 0
+
+
+def _cmd_outcomes(args: argparse.Namespace) -> int:
+    import os
+
+    from careerkit.outcomes import build_ledger, render
+
+    root = args.runs or os.environ.get("CAREERKIT_RUNS")
+    if not root:
+        print("give --runs or set CAREERKIT_RUNS to the directory holding runs/", file=sys.stderr)
+        return 2
+    print(render(build_ledger(Path(root))))
+    return 0
+
+
+def _cmd_init(args: argparse.Namespace) -> int:
+    import shutil
+
+    from careerkit.paths import SAMPLE_CORPUS
+
+    dest = Path(args.dest)
+    if dest.exists() and any(dest.iterdir()):
+        print(f"{dest} exists and is not empty; refusing to overwrite it", file=sys.stderr)
+        return 2
+    shutil.copytree(SAMPLE_CORPUS, dest, dirs_exist_ok=True)
+    message = f"""Copied the sample corpus to {dest}.
+Every line in it is fiction. Replace data/spine.yaml first, then delete the
+sample evidence and write your own, one unit per thing you did. Then:
+    export CAREERKIT_CORPUS={dest}
+    careerkit stale        # what still needs a date and a name
+    careerkit verdict --jd <parsed-jd.json>"""
+    print(message)
+    return 0
+
+
 def _cmd_prep(args: argparse.Namespace) -> int:
     from careerkit.prep import build_prep, render
 
@@ -252,6 +301,20 @@ def main(argv: list[str] | None = None) -> int:
         "--out", default=None, help="output path (default: overwrite the draft in place)"
     )
     deslop.set_defaults(func=_cmd_deslop)
+
+    verdict = sub.add_parser("verdict", help="the fit verdict, computed before any drafting")
+    verdict.add_argument("--jd", required=True, help="parsed JD json")
+    verdict.add_argument("--data", default=None, help=_DATA_HELP)
+    verdict.add_argument("--out", default=None, help="write markdown here instead of stdout")
+    verdict.set_defaults(func=_cmd_verdict)
+
+    outcomes = sub.add_parser("outcomes", help="every run in one table: status, sent, outcome")
+    outcomes.add_argument("--runs", default=None, help="runs directory (default: $CAREERKIT_RUNS)")
+    outcomes.set_defaults(func=_cmd_outcomes)
+
+    init = sub.add_parser("init", help="copy the sample corpus to start your own")
+    init.add_argument("dest", help="directory to create")
+    init.set_defaults(func=_cmd_init)
 
     prep = sub.add_parser(
         "prep", help="interview prep sheet from a run: bounds, open items, probes"

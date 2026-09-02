@@ -866,3 +866,22 @@ defects:
       again. Also found while attaching fixtures: editing defects.yaml by
       matching a text line attached a fixture to the wrong entry, because two
       defects shared the text. Anchor edits by id.
+
+  - id: jd-parse-capability-as-credential
+    date: 2026-09-02
+    shipped: false
+    scope: document
+    text: "Experience with A/B testing, pricing tools, or personalization platforms"
+    problem: >-
+      The JD parse marked a capability requirement as kind credential. The
+      strategy engine then worded it as a hard credential gate, and the first
+      run of `careerkit verdict` printed "Flag the JD as a poor fit" under a
+      verdict that said Apply. Found the day verdict existed, on the one run
+      whose parse was a week old.
+    caught_by: author
+    enforced_by: human
+    note: >-
+      The parse is an LLM step and its kinds are its judgement. What verdict
+      now does is refuse to render a preferred credential as a gate, so a
+      mis-kinded preference cannot contradict the headline; a mis-kinded
+      REQUIRED capability still can, and only reading the parse catches it.

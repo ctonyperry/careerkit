@@ -175,7 +175,19 @@ person is the only gate with access to the truth.
    where a claim stops, verify items still open, the doubted figure beside the
    one that is safe, and the declined record in the person's own words. The
    command re-sorts what exists around the questions. It generates nothing.
-6. **Cross-run drift.** The same unit rendered as "developer zero" in one
+6. ~~The verdict as a command.~~ **Done 2026-09-02.** Six manifests carried a
+   hand-written verdict at the top and the arithmetic under each was the
+   same: required capabilities by status, tenure from the spine, whether a
+   credential carries an equivalence clause. `careerkit verdict` computes
+   that and says one of three things. The judgement about wanting the job
+   stays with the person.
+7. ~~The outcomes ledger.~~ **Done 2026-09-02.** Six packages out and no way to
+   see across them without opening six files. `careerkit outcomes` reads
+   every manifest; `outcome`, `outcome_date` and `outcome_notes` are the
+   fields the person fills in when something comes back. Also `careerkit
+   init`, because the README's "copy the sample and replace every line" was
+   an instruction, and instructions get skipped.
+8. **Cross-run drift.** The same unit rendered as "developer zero" in one
    package and "first developer" in another. Visible now only by hand.
 
 Not on the list: anything that has not yet hurt in a real run.
