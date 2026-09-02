@@ -90,6 +90,9 @@ def check(defect: dict) -> tuple[str, str]:
     if enforced.startswith("metrics:"):
         ok = _metrics_signal(defect)
         return ("CAUGHT", enforced) if ok else ("MISSED", f"{enforced} not wired")
+    if enforced.startswith("test:"):
+        # Enforced by a named unit test; pytest is the replay.
+        return "MANUAL", enforced
     if enforced.startswith(("crosscheck:", "skill:")):
         # Both need a whole run or a whole document; the unit tests in
         # tests/test_crosscheck.py cover the crosscheck rules directly.

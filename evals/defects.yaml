@@ -885,3 +885,23 @@ defects:
       now does is refuse to render a preferred credential as a gate, so a
       mis-kinded preference cannot contradict the headline; a mis-kinded
       REQUIRED capability still can, and only reading the parse catches it.
+
+  - id: unmapped-want-scored-as-hit
+    date: 2026-09-02
+    shipped: false
+    scope: document
+    text: "| honeycomb.io | Senior Forward Deployed Engineer | apply | 10/1/0/0 | 20 unmapped terms |"
+    problem: >-
+      The first triage of a real inbox said Apply on all fifteen postings with
+      near-perfect coverage. A requirement the parse could not map carries an
+      empty skills list, and the coverage engine scores an empty list as HIT,
+      so every want the record could not answer was counted as answered. The
+      table was read before it was trusted, which is the only reason it did
+      not decide anything.
+    caught_by: author
+    enforced_by: test:test_unmapped_required_wants_never_count_as_hits
+    note: >-
+      The verdict keeps unmapped requirements out of the counts, lists them,
+      and says "unmapped" when they outnumber the hits. The underlying scoring
+      of an empty list is unchanged, because the credential and tenure
+      requirements rely on it; the verdict is where the meaning is assigned.
