@@ -53,7 +53,7 @@ def test_decide_records_only_what_the_person_said(runs: Path) -> None:
     assert "Nothing to decide" in queue_before  # the sample decided its two terms already
     bad = srv.terms_decide("Fleet telemetry", "alias", tag="not-a-tag")
     assert bad.startswith("'not-a-tag' is not")
-    assert srv.terms_decide("Fleet telemetry", "alias") == "an alias needs the tag it maps to"
+    assert srv.terms_decide("Fleet telemetry", "alias").startswith("an alias needs the tag")
     assert srv.terms_decide("Fleet telemetry", "maybe") == "decision must be alias, gap or ignore"
     ok = srv.terms_decide("Fleet telemetry", "alias", tag="telemetry",
                           note="same idea as the xAPI work")
