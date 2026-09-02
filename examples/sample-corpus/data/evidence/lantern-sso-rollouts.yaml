@@ -1,0 +1,24 @@
+id: lantern-sso-rollouts
+role: lantern
+narrative: >-
+  Led SSO and SCIM rollouts for enterprise tenants of the Lantern Analytics
+  platform, most on Okta or Entra ID over SAML. Ran discovery with each customer's
+  identity team, wrote the attribute mapping, and stayed on through cutover.
+  Around 40 tenants over three years.
+metrics:
+  - {value: "40 enterprise tenants", tier: PRIMARY}
+skills: [sso, scim, idp-configuration, enterprise-integration, customer-facing, stakeholder-guidance]
+tier: PRIMARY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: null
+render_notes:
+  - >-
+    The tenant count comes from the internal rollout tracker and is safe to
+    print. Do not inflate it to "dozens of Fortune 500 customers"; most were
+    mid-market.
+  - >-
+    The interview answer for "what breaks in an SSO rollout" is attribute
+    mapping and clock skew, in that order. Morgan has stories for both.
+verify: []

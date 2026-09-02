@@ -1,0 +1,14 @@
+id: lantern-reporting-old
+role: lantern
+narrative: >-
+  Fixed a bug in the customer reporting export where totals disagreed with
+  the dashboard.
+metrics: []
+skills: [reporting, data-quality]
+tier: MEMORY
+status: confirmed
+confirmed_on: "2026-07-15"
+confirmed_by: Morgan
+render_notes:
+  - Superseded by lantern-reporting after Morgan recalled the data-contract work. Kept as history.
+verify: []

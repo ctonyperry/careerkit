@@ -1,0 +1,17 @@
+id: project-webhook-replayer
+role: null
+kind: portfolio-project
+narrative: >-
+  Built a small TypeScript tool that records incoming webhooks and replays
+  them against a local service, for debugging integrations without waiting
+  for the upstream system to fire again. Node.js, with a test suite.
+metrics: []
+skills: [typescript, node, debugging, tdd]
+tier: MEMORY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: https://github.com/example/webhook-replayer
+render_notes:
+  - Personal project. Renders under Projects, never as employment.
+verify: []

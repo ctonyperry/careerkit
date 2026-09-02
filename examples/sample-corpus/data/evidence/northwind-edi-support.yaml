@@ -1,0 +1,16 @@
+id: northwind-edi-support
+role: northwind
+narrative: >-
+  Supported EDI integrations for freight customers of Northwind Logistics,
+  tracking every incident in Jira from first report to root cause. Handled
+  the after-hours escalations for the West Coast accounts.
+metrics: []
+skills: [debugging, ticketing, customer-facing, technical-support]
+tier: PRIMARY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: null
+render_notes:
+  - Continuity role on most resumes; one line is enough.
+verify: []

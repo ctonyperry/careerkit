@@ -1,0 +1,868 @@
+# Defect corpus: every quality failure this project has actually shipped or
+# nearly shipped, with provenance and current enforcement.
+#
+# The point is one question nobody could answer before this file existed:
+# WOULD THE CURRENT PIPELINE CATCH YESTERDAY'S MISTAKES?
+#
+# `caught_by` is what found it the first time. `enforced_by` is what would find
+# it now. When enforced_by is `human`, that is an honest admission, not a gap to
+# paper over: some of these resist mechanisation and the reason is recorded.
+#
+# Run: python tools/regress.py
+
+defects:
+  - id: fabricated-tenure-aggregate
+    form: prose
+    date: 2026-08-24
+    shipped: true
+    text: "into fifteen years of customer-facing integration consulting at enterprise scale"
+    problem: >-
+      A summary aggregate computable from nothing. The spine gives six years of
+      customer-facing consulting; reaching fifteen required counting a platform
+      ownership role and a contract whose own render note says NOT customer-facing.
+    caught_by: adversarial-eval
+    enforced_by: lint:tenure-not-computed
+    expect_block: true
+
+  - id: tenure-aggregate-published
+    form: prose
+    date: 2026-08-24
+    shipped: true
+    text: "with 15+ years customer-facing across technical pre-sales and post-sales delivery"
+    problem: >-
+      The same defect in the digit form, live in Google Drive for several hours.
+      Aggregates feel like arithmetic rather than claims, so they bypass the
+      instinct to check a source.
+    caught_by: tony
+    enforced_by: lint:tenure-not-computed
+    expect_block: true
+
+  - id: decade-error
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "from running colo firewalls and load balancing in the 2000s"
+    problem: >-
+      The colo work is AthenaOnline, 2011-2018. Off by a decade, and trivially
+      falsifiable by reading the resume next to the letter.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      crosscheck catches a role rendered with the wrong TENSE, not a claim placed
+      in the wrong decade in prose. Detecting that needs the claim tied to a
+      role, which prose does not do.
+
+  - id: house-rule-slop-quoted
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "I was the one in the room with the customer, their implementation partner, and our engineering team until it worked."
+    problem: >-
+      Almost verbatim the example CLAUDE.md names as semantic slop ("staying in
+      the room when it breaks"). Also over-framed: the evidence says he brought
+      the root cause to engineering, collaboratively.
+    caught_by: adversarial-eval
+    enforced_by: skill:avoid-ai-writing
+    note: Atmosphere-pose detection is semantic; the CP3.5 pass is the gate.
+
+  - id: self-rating-tricolon
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "I know the protocols, the failure modes, and what it feels like to be the customer in those meetings."
+    problem: >-
+      Self-rating plus atmosphere plus a rhetorical tricolon, and factually
+      inverted: he was the vendor-side consultant, never the customer.
+    caught_by: adversarial-eval
+    enforced_by: lint:tricolon
+    expect_block: false  # tricolon is advisory by design
+
+  - id: defensive-education-framing
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "The degree. I don't have a bachelor's. I'll put that up against the 'or equivalent' clause and let the interviews decide."
+    problem: >-
+      The compensatory framing the house rules ban outright: leads with the
+      absence, then argues against the requirement.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      "no degree but" is bannable as a phrase; a whole paragraph performing the
+      same move is not a string match. STYLE-GUIDE section 3 carries the rule.
+
+  - id: invented-motive
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "That was deliberate. I wanted serious hands-on time with AI-assisted development inside a security organization before picking where to land long term."
+    problem: >-
+      A career narrative no unit records, which also quietly overwrote the exit
+      framing the spine does record.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: Motive is unfalsifiable from a corpus; only a reader who knows the spine catches it.
+
+  - id: cross-jd-contamination
+    form: prose
+    date: 2026-08-24
+    shipped: false
+    text: "Block being all-in on AI is a big part of why I'm applying"
+    problem: >-
+      "All in on" paraphrases the OKTA posting. The Cash App JD never mentions
+      AI. The sentiment happened to be true of Block, which is why this class
+      survives casual review.
+    caught_by: tony
+    enforced_by: crosscheck:jd-trace
+    expect_block: true
+
+  - id: jd-noun-borrowed
+    form: prose
+    date: 2026-08-25
+    shipped: false
+    text: "planning SSO and SCIM deployments for enterprise customers"
+    problem: >-
+      "Deployments" is Okta's noun. The units describe integrations and
+      consulting engagements. Borrowing the employer's vocabulary for your own
+      history is mirroring, not tailoring.
+    caught_by: adversarial-eval
+    enforced_by: lint:jd-mirroring
+    scope: document
+    expect_block: false
+
+  - id: first-person-in-resume
+    date: 2026-08-25
+    shipped: false
+    text: "their compliance system required, so I brokered a new reconciliation API"
+    problem: Resume voice carries no "I". The letter does; the resume does not.
+    caught_by: lint  # noticed on re-read, not by a rule
+    enforced_by: human
+    note: >-
+      A candidate lint rule: a bare "I " in a resume-shaped document. Not yet
+      written because the same file type is used for letters.
+
+  - id: article-opener-garden-path
+    date: 2026-08-25
+    shipped: false
+    text: "The API subject-matter expert customer engineering teams built against"
+    problem: >-
+      Opens with an article rather than a verb, and drops the relative pronoun,
+      so the reader misparses "expert customer engineering teams" before
+      recovering.
+    caught_by: tony
+    enforced_by: lint:bullet-opener
+    expect_block: false
+
+  - id: closure-flourish
+    form: prose
+    date: 2026-08-25
+    shipped: false
+    text: "to verify output against real browser sessions before anything shipped."
+    problem: >-
+      A trailing clause carrying no information, present for cadence. Fails the
+      deletion test.
+    caught_by: tony
+    enforced_by: skill:avoid-ai-writing
+
+  - id: approval-framed-boast
+    form: prose
+    date: 2026-08-25
+    shipped: false
+    text: "The six-month contract was extended to nine to roll it out to further sites."
+    problem: >-
+      The grammatical subject is their decision about him rather than the work.
+      Re-subjecting onto the software fixes it without losing the fact.
+    caught_by: tony
+    enforced_by: human
+    note: >-
+      Deliberately not mechanised: "brought in to break a renewal-blocking
+      problem" is also approval-framed and reads well, because there the
+      approval sets up a challenge instead of being the payoff.
+
+  - id: doubted-metric-printed
+    date: 2026-08-25
+    shipped: true
+    text: "a $10M rollout to ~2M McDonald's front-line workers"
+    problem: >-
+      Tony stopped standing behind the figure ("I think 3 might have been the
+      real number") while it was live in Drive. Confirmation moved the corpus;
+      doubt did not.
+    caught_by: tony
+    enforced_by: lint:do-not-print
+    expect_block: true
+    # The rule reads do_not_print off the corpus, so the fixture carries the
+    # phrase the original unit protected and regress injects it. Without this
+    # the entry could only be replayed against the one corpus it came from.
+    context:
+      do_not_print: ["$10M"]
+
+  - id: withheld-artifact-offered
+    date: 2026-08-25
+    shipped: false
+    text: "**UX Telemetry Kit** (open source, npm): a React module publishing analytics events"
+    problem: >-
+      An artifact Tony is not ready to share was written onto a resume, and the
+      selector kept offering the unit to the writer afterwards.
+    caught_by: tony
+    enforced_by: lint:do-not-print
+    expect_block: true
+    context:
+      do_not_print: ["UX Telemetry Kit"]
+
+  - id: unsupported-skills-keyword
+    date: 2026-08-25
+    shipped: false
+    text: "JavaScript front-end work"
+    problem: >-
+      Listed in Technical Skills while no bullet demonstrated it, and the gap
+      report scored `javascript` MISS. A JD-required keyword was being carried
+      by the keyword line alone.
+    caught_by: metrics  # the hand-run audit that became tools/metrics.py
+    enforced_by: metrics:skills_terms_unsupported
+
+  - id: foreign-domain-jargon
+    date: 2026-08-25
+    shipped: false
+    text: "error-class-aware retry (5xx, network and 429, never 4xx) ... sendBeacon"
+    problem: >-
+      Library implementation detail and learning-industry vocabulary (xAPI x4,
+      SCORM, AICC) occupying 18% of a resume aimed at an identity company.
+    caught_by: tony
+    enforced_by: metrics:jargon_absent_from_jd
+
+  - id: spilled-page
+    date: 2026-08-25
+    shipped: true
+    text: "947 markdown words rendered to two pages"
+    problem: >-
+      Both resumes read as one-page drafts and rendered to two, the shape the
+      house rules call the worst possible. Nobody had measured.
+    caught_by: tony
+    enforced_by: metrics:pages
+
+  - id: minimising-summary
+    form: prose
+    date: 2026-08-25
+    shipped: false
+    text: "then spent six years at LinkedIn planning SSO and SCIM rollouts for enterprise customers and rescuing the ones that stalled"
+    problem: >-
+      Compressed a large consulting practice into two protocols and one verb,
+      and dropped the concurrency the target JD explicitly requires.
+    caught_by: tony
+    enforced_by: human
+    note: >-
+      The deepest unmechanised class: the text is true, sourced, lint-clean, and
+      still undersells. Only someone who lived the role can see it.
+
+  # --- found by the expert panel, 2026-08-25 ---
+
+  - id: above-fold-contradicts-headline
+    date: 2026-08-25
+    shipped: false
+    text: "title 'Senior Technical Consultant' over a first role of 'xAPI Specialist / Architect (contract)' with two engineering bullets"
+    problem: >-
+      In the seven seconds a screener spends, the only visible role is an
+      individual-contributor engineering contract, so the top of the page
+      argues against the title line. The consulting evidence exists only as an
+      unsupported summary claim until below the fold.
+    caught_by: panel:recruiter
+    enforced_by: human
+    note: >-
+      Invisible to every other check. Lint reads lines, the adversarial pass
+      reads for truth, and a human reading the whole document sees the
+      consulting work because they scroll. Only a reviewer constrained to the
+      visible slice can see this.
+
+  - id: sp-side-claimed-as-idp-side
+    date: 2026-08-25
+    shipped: false
+    text: "Okta itself is not new territory ... custom claim expressions and external connections"
+    problem: >-
+      Every SSO and SAML claim in the corpus is SERVICE-PROVIDER side: consuming
+      assertions from a customer's identity provider, and building the SP half
+      at AthenaOnline. The target role sits on the IdP side. The writing does
+      not lie, but it reads more confidently than the evidence supports.
+    caught_by: panel:hiring-manager
+    enforced_by: human
+    note: >-
+      A corpus-level distinction nobody had drawn. The fix is in the evidence
+      units, not the prose: SP-side and IdP-side experience should be separable
+      so a JD on either side gets an honest coverage answer.
+
+  - id: skills-term-partially-unsupported
+    date: 2026-08-25
+    shipped: false
+    text: "identity lifecycle with HRIS sources (Workday, ADP)"
+    problem: >-
+      Workday and ADP appeared nowhere in the document. The metrics check passed
+      the term because ONE of its words ("identity") appeared, so a compound
+      term could smuggle in unsupported proper nouns.
+    caught_by: panel:hiring-manager
+    enforced_by: metrics:skills_terms_unsupported
+    note: Check now requires the distinctive keys, not any key.
+
+  - id: repeated-construction
+    date: 2026-08-25
+    shipped: false
+    text: "Was the technical voice on sales calls ... / Was the API subject-matter expert ..."
+    problem: >-
+      Two consecutive bullets opening with the identical construction, and
+      "Ran the colo network" / "Ran technical operations" repeating two sections
+      apart. Uniform construction is the durable machine-writing tell.
+    caught_by: panel:writing-critic
+    enforced_by: human
+    note: >-
+      Mechanisable and not yet built: flag consecutive bullets sharing their
+      first two words, and repeated bullet-opening verbs within a document.
+
+  - id: phrase-reused-across-documents
+    date: 2026-08-25
+    shipped: true
+    text: "at a scale the platform had never handled"
+    problem: >-
+      Verbatim in both the resume and the cover letter of the same package, as
+      were "thirty-one years" (three times across the pair) and "tier-2
+      support". A reader who opens both sees the seam.
+    caught_by: panel:writing-critic
+    enforced_by: human
+    note: >-
+      Mechanisable and not yet built: crosscheck already loads every document in
+      a run, so distinctive phrases repeated across them are detectable there.
+
+  - id: untargeted-document-shaped-by-last-target
+    form: prose
+    date: 2026-08-25
+    shipped: false
+    text: "Technical Consultant · Enterprise integrations, SSO and SCIM"
+    problem: >-
+      The LinkedIn profile is the master copy with no JD to serve, yet it was
+      written straight after the Okta package and came out Okta-shaped: an
+      identity-only headline, an About that called the LinkedIn years "mostly
+      identity and provisioning work", and no mention of the applied-AI thread
+      at all. The corpus carries fourteen units tagged enterprise-integration
+      against four for SSO and five for agentic-development, so the emphasis
+      inverted the evidence.
+    caught_by: tony
+    enforced_by: human
+    note: >-
+      The mirror image of cross-JD contamination: there, a target's language
+      leaked into another target's document; here, a target's SHAPE leaked into
+      a document that has no target. Candidate mechanical check, not yet built:
+      compare the surface mix of an untargeted document against the corpus tag
+      distribution and flag a skew.
+
+  - id: fact-recorded-on-wrong-unit
+    date: 2026-08-25
+    shipped: false
+    text: "instrumenting internal React applications in Apple's information security organization"
+    problem: >-
+      Tony confirmed the host applications were React, and the fact was written
+      to the javascript-frameworks unit but not to apple-xapi-library, where the
+      claim is actually made. A verifier reading the Apple unit found no React
+      and correctly called the claim unsupported. True fact, wrong location,
+      indistinguishable from a fabrication at review time.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      Candidate check: a claim about a role should trace to a unit belonging to
+      that role. The claim sheet already maps bullets to units, so a mismatch
+      between a bullet's section and the cited unit's role is computable.
+
+  - id: override-bypasses-provisional-gate
+    date: 2026-08-25
+    shipped: false
+    text: "a PROVISIONAL unit with an open verify rendered as settled fact while finalize reported READY"
+    problem: >-
+      finalize validates the brief's SELECTION, and the unit had been added as a
+      deliberate CP2 override, so the gate that exists to catch provisional
+      claims never saw it. Any override is invisible to it.
+    caught_by: adversarial-eval
+    enforced_by: crosscheck:citecheck
+    scope: run
+    note: >-
+      MECHANISED 2026-08-25. tools/citecheck.py reads the claim sheet's cited
+      unit ids rather than recomputing the selection, so an override is vetted
+      like any other citation. Rule cite-provisional.
+
+  - id: education-composed-not-transcribed
+    date: 2026-08-25
+    shipped: false
+    text: "General Assembly accelerator and Lane Community College classes, with the 1993 date, the no-credential note and the GED all dropped"
+    problem: >-
+      The education block was composed rather than transcribed from the spine.
+      It dropped the date, dropped "no credential", and omitted the GED, while
+      the cover letter named the GED. Against a role gating on a degree, the
+      package contradicted itself on its most sensitive fact.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      The linter blocks INVENTED credentials, the failure it was built for. It
+      cannot see omission or paraphrase of real spine items, so this class
+      passes clean. Mechanisable as a spine-education diff against the rendered
+      block.
+
+  - id: empty-skills-requirement-reports-hit
+    date: 2026-08-25
+    shipped: false
+    text: "Salesforce Flow proficiency scored HIT against a corpus with zero Salesforce evidence"
+    problem: >-
+      A capability requirement whose skills list is empty has nothing to fail
+      against, so the coverage engine reports HIT by vacuous truth. On the
+      Salesforce parse this turned a total MISS into a HIT and inflated the
+      headline coverage figure. The parse is what leaves the list empty, and it
+      does so precisely when JD language maps to no canonical tag, which is the
+      case where coverage is least likely to be real.
+    caught_by: human
+    enforced_by: human
+    note: >-
+      Nothing mechanical catches this today. Mechanisable in the gap engine: a capability requirement with no skills
+      should report UNKNOWN, not HIT, and should not count toward the coverage
+      denominator as if it were satisfied. Only this run is affected; the three
+      earlier parses have no empty-skills capability requirements.
+
+  - id: role-shaped-unit-outranked
+    date: 2026-08-25
+    shipped: false
+    text: "the pre-sales unit was cut from a pre-sales resume by the length budget"
+    problem: >-
+      linkedin-presales-technical records Tony performing the exact function a
+      pre-sales JD describes, and the ranking dropped it. Two causes compound:
+      it is MEMORY tier, which costs it strength, and its tags are the generic
+      customer-facing ones that a dozen other units also carry, so relevance
+      sees nothing distinctive about it. Relevance counts tag matches, which
+      rewards units that are broadly applicable over the one unit that is
+      specifically about the job.
+    caught_by: human
+    enforced_by: human
+    note: >-
+      Nothing mechanical catches this today. target_affinity exists for exactly this and was not set on the unit. The
+      cheaper fix is data, not code: give the role-shaped unit an affinity for
+      presales-solution-architecture. The open question is whether ranking
+      should also reward tag SPECIFICITY, so that a tag carried by two units
+      outweighs one carried by fifteen.
+
+  - id: jd-figure-blocked-as-unsourced
+    date: 2026-08-25
+    shipped: false
+    text: "'Travel at 25% is fine' blocked as a fabricated metric"
+    problem: >-
+      number-without-source checks figures against evidence units, and a figure
+      quoted from the JD itself belongs to no unit. Answering an employer's own
+      stated number is the one case where a figure is definitionally sourced,
+      and the gate calls it fabrication. The rule is right and its corpus is
+      incomplete.
+    caught_by: lint
+    enforced_by: lint:number-without-source
+    form: paragraph
+    note: >-
+      Recorded with the rule that fires, so the regression harness asserts the
+      false positive still reproduces: if the rule is ever taught to read the
+      JD file, this entry turns over and the workaround can come out.
+      Mechanisable: number-without-source should accept a figure that appears
+      verbatim in the run's JD file, the same way jd-trace already reads that
+      file. Worked around here by rephrasing to "up to a quarter of the time",
+      which is honest but is the gate shaping the prose rather than checking it.
+
+  - id: invented-consequence-generalization
+    date: 2026-08-25
+    shipped: false
+    text: "a brokered customer API 'then existed for every customer after them'"
+    problem: >-
+      The unit records the result as unblocking that customer's frozen library
+      and giving their compliance administrators a path. Nothing says the API
+      became a general platform capability. Both documents had grown that
+      ending independently, the resume as "turned a compliance constraint into
+      a platform capability" and the letter as the sentence above. The pull is
+      structural: a JD asking for reusable capability makes the generalized
+      version of any story the more attractive one to tell.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      Same family as edia-invented-origin-story, and the second time in two
+      packages that a JD's reusability language bent a real story one step past
+      what its unit records. Worth watching for whether a third instance makes
+      it a checkable pattern rather than a judgment call.
+
+  - id: claim-uncited-in-sheet
+    date: 2026-08-25
+    shipped: true
+    text: "HRIS-sourced provisioning on Workday and ADP, in a bullet citing only the McDonald's unit"
+    problem: >-
+      The Edia resume named Workday and ADP. The claim sheet's only LinkedIn
+      integration row cited linkedin-mcdonalds, which contains neither word.
+      The fact is true and PRIMARY-tier on linkedin-hris-integrations; the row
+      for it was never written. Shipped and exported to Drive, past lint,
+      finalize, crosscheck and a nine-blocker adversarial pass, because every
+      one of those either trusts the selection or reads for meaning, and none
+      of them walks a sentence back to the unit under it.
+    caught_by: crosscheck:citecheck
+    enforced_by: crosscheck:citecheck
+    scope: run
+    note: >-
+      Third instance of the same family (edia React, moveworks SME scope, this).
+      cite-term-unfound now catches the mechanical half: a distinctive term in a
+      bullet that appears in none of the units cited for its section. It cannot
+      catch a bullet that misrepresents a unit using only that unit's own words,
+      which is what the reviewer panel is for.
+
+  - id: tenure-window-misattributed
+    date: 2026-08-25
+    shipped: false
+    text: "The last six were spent as the technical contact for enterprise customers"
+    problem: >-
+      LinkedIn ran Jun 2019 to Sep 2025 and the Apple contract ran Sep 2025 to
+      Jun 2026, so from 2026-08-25 the last six years are LinkedIn minus its
+      first fourteen months plus all of Apple. The summary also dropped Apple
+      from the career arc while the Experience section led with it. Every figure
+      was individually true and the window they were attached to was not.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      tenure-not-computed blocks a SPAN with no spine support. It does not check
+      that a supported span is attached to the right ROLE, which is the failure
+      here. Mechanisable: when a summary says "the last N years" and names an
+      employer, N must reconcile against the spine from today's date, not from
+      that employer's end date.
+
+  - id: simulated-personas-as-experts
+    date: 2026-08-25
+    shipped: false
+    text: "put through staged expert roundtables and adversarial review at the design stage"
+    problem: >-
+      The unit records multi-persona roundtables and red-teams run by the model
+      itself. Rendered without that qualifier, "expert roundtables" borrows the
+      credibility of outside review that never happened, and the passive
+      construction removes the actor who would give it away. Two independent
+      reviewers flagged the same phrase without conferring, one on integrity and
+      one on register.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      A general class worth naming: an agent-run process described in the
+      vocabulary of a human one. Now rendered as "model-run persona reviews".
+      Not mechanisable as a rule, but a checkable question at review time, which
+      is whether any noun in the sentence implies people who were not there.
+
+
+  - id: ttr-uninterpretable-on-short-text
+    date: 2026-08-25
+    shipped: false
+    text: "type-token 0.89 (human prose 0.50-0.65+)"
+    problem: >-
+      Type-token ratio falls as a text gets longer, so a 296-word cover letter
+      cannot be compared against a band measured on full-length prose. Every
+      letter this pipeline has produced scores 0.87 to 0.91, which means the
+      number carries no signal and reads as a standing failure. It invites
+      chasing a target that correct writing cannot hit.
+    caught_by: human
+    enforced_by: human
+    note: >-
+      Mechanisable: either compute a length-normalised measure (MTLD or a
+      moving-average TTR over a fixed window), or suppress the comparison band
+      below a word count where it means something. Until then the resume figure
+      is weak evidence and the letter figure is none.
+
+  - id: uniform-bullet-density
+    date: 2026-08-25
+    shipped: false
+    text: "twelve bullets of 27 to 50 words, all but two between 31 and 42"
+    problem: >-
+      Every bullet did the same amount of work: a verb sentence, then a second
+      sentence adding roughly three specifics. Individually each was concrete
+      and sourced, and lint, crosscheck, citecheck and finalize all passed
+      clean, because no rule looks at the SHAPE of a set of bullets. Tony read
+      the result and said it still smelled of AI, which it did. Twelve bullets
+      also opened with twelve different verbs, a thesaurus parade that pushes
+      type-token ratio up where a person would repeat "built" and "ran".
+    caught_by: human
+    enforced_by: metrics:bullet_length_spread
+    note: >-
+      Mechanisable and cheap: report the spread of bullet word counts and the
+      count of distinct opening verbs against the bullet count. A resume whose
+      bullets all land inside a ten-word band is machine-shaped whatever the
+      sentences say. Rewritten to a 12-to-49 spread with deliberate verb
+      repetition.
+
+  - id: critic-rewards-invented-specific
+    date: 2026-08-25
+    shipped: false
+    text: "retry that knows a 429 from a 404"
+    problem: >-
+      Written while acting on a style finding, and the writing critic singled it
+      out as "the one technical detail that proves the work was done rather than
+      described". The unit says retry on 5xx, network and 429, never on 4xx. A
+      404 is a plausible instance of 4xx and appears nowhere in the corpus, so
+      the sentence the critic praised most was the only invented fact on the
+      page. citecheck blocked it on cite-term-unfound the first time it ran
+      against the revision.
+    caught_by: crosscheck:citecheck
+    enforced_by: crosscheck:citecheck
+    scope: run
+    note: >-
+      The clearest case yet for keeping both halves of the review. A reader
+      judging voice will reward a concrete-sounding detail precisely because it
+      sounds concrete, and has no way to know it is not in the evidence. Style
+      review cannot be trusted to police facts, and fact review cannot be
+      trusted to police style. Neither is optional.
+
+  - id: letter-is-resume-rotated
+    date: 2026-08-25
+    shipped: false
+    text: "required/needed, and 'changed our pipeline and re-ran' becoming four noun phrases in a series"
+    problem: >-
+      The cover letter retold the resume's own incidents, and every shared fact
+      appeared in different words. Not one was simply repeated. A person
+      retelling their own story reuses their own phrasing; a rewrite pass avoids
+      repetition on principle, so the avoidance is the tell. Three separate
+      style rewrites failed to fix it because the defect was structural: the
+      letter had no material of its own, so every sentence in it was a
+      paraphrase of one on the resume.
+    caught_by: adversarial-eval
+    enforced_by: human
+    note: >-
+      The fix is not lexical. Give the letter a unit the resume does not carry,
+      and let it point at the resume for the rest. Mechanisable in part: flag
+      any sentence pair across the two documents with high content-word overlap
+      but low verbatim overlap, which is precisely the rotation signature.
+
+  - id: promotional-register-in-bullets
+    date: 2026-08-25
+    shipped: false
+    text: "Handled the cases that quietly lose data, because instrumentation nobody trusts gets switched off"
+    problem: >-
+      Written while acting on the new purpose-before-parts rule, and it
+      overshot in one clause. Naming what a thing is for is informational;
+      arguing why the reader should be impressed is promotion. This bullet
+      carried an evaluative adverb (quietly), a causal clause justifying the
+      work (because...), and a verb picked for weight over accuracy (handled,
+      for built). None of it added a fact. Tony: "reads promo material rather
+      than informational."
+    caught_by: human
+    enforced_by: human
+    note: >-
+      The correction is now a table in STYLE-GUIDE.md, because the failure is
+      one clause away from the rule that caused it and will recur otherwise.
+      Partly mechanisable: a lint for justification clauses in bullets, for
+      evaluative adverbs on one's own work, and for a bare "I" on a resume,
+      which was violated in the same pass.
+
+  - id: functional-title-shipped-as-title-of-record
+    date: 2026-08-25
+    shipped: true
+    text: "xAPI Specialist / Architect, and xAPI Specialist, for a role titled Security Analyst"
+    problem: >-
+      The Apple contract's title of record with TEKsystems and Apple is Security
+      Analyst. "xAPI Specialist" was a functional description Tony wrote himself
+      because the real title says nothing about the work, and it entered the
+      spine as the title of record. Every gate then defended it correctly:
+      lint checks titles against the spine, and the spine was wrong. Four
+      packages shipped with it, one of them exported to Drive. An agency
+      contract is the worst case for this, because the staffing firm is the
+      employer of record and has a title on file that a background check reads.
+    caught_by: human
+    enforced_by: human
+    note: >-
+      Not mechanisable, and that is the point worth recording. Every gate here
+      validates against the corpus, so a wrong fact IN the corpus is invisible
+      to all of them and stays invisible until Tony says otherwise. The spine
+      now separates title_of_record from functional_titles, and the rule is
+      that the title line carries the record while a subtitle carries the
+      function.
+
+  - id: finalize-flags-dropped-provisional
+    date: 2026-08-26
+    shipped: false
+    text: "Provisional unit 'ims-web-releases' is used; confirm it before this resume prints"
+    problem: >-
+      It is not used. The brief selected it, the claim sheet deliberately
+      dropped it, and no sentence in the resume rests on it. finalize validates
+      the BRIEF's selection rather than what the document cites, so it reports a
+      unit the package removed. This is the same root cause as
+      override-bypasses-provisional-gate, seen from the other side: adding a
+      unit hides it from the gate, dropping one invents a finding. citecheck,
+      which reads the claim sheet, correctly reported zero blocking on the same
+      package.
+    caught_by: human
+    enforced_by: crosscheck:citecheck
+    scope: run
+    note: >-
+      False positives are not harmless here. A gate that cries wolf on a
+      correctly-built package trains the operator to wave it through, which is
+      exactly how the real provisional escape shipped in the Edia run. The fix
+      is the one already written down: finalize should take the claim sheet's
+      cited unit ids instead of recomputing the selection.
+
+  - id: dangling-cross-bullet-reference
+    date: 2026-08-26
+    shipped: false
+    text: "Diagnosed a provisioning sync failing partway through that rollout"
+    problem: >-
+      A layout variant removed the McDonald's bullet and the next bullet still
+      said "that rollout". Which rollout? The one just deleted. Tony caught it;
+      no gate did. The deeper issue is that the format invites it: bullets are
+      cut, reordered and re-selected per target, so any bullet leaning on a
+      neighbour is one edit from nonsense, and the nonsense reads as
+      carelessness exactly where a reader decides whether to continue.
+    caught_by: human
+    enforced_by: crosscheck:dangling-reference
+    scope: document
+    note: >-
+      Now gated, with severity split by whether an antecedent exists: BLOCK when
+      nothing in the role supplies it, WARN when an earlier bullet does, since
+      that reads correctly today and is fragile tomorrow. Three shipped resumes
+      carry the WARN form. Finding it also exposed a shell hazard: heredocs
+      collapse a doubled backslash, so the regex word boundaries were written as
+      literal backspace bytes and the rule silently matched nothing. It reported
+      clean on every run before anyone noticed it could not fire.
+
+  - id: restated-across-furniture
+    date: 2026-08-26
+    shipped: true
+    text: "Apple's information security organization, named in the summary, the role heading, the subtitle and the first bullet"
+    problem: >-
+      Five blind critics read five packages independently and all found the same
+      thing: one fact stated in the tagline, the summary, the role heading, the
+      italic subtitle and then again in the bullet. One counted an employer
+      named four times inside four lines. Another found a role subtitle that was
+      a verbatim copy of the summary sentence eighteen lines above it. On a page
+      with a one-page budget, the repeats are spending words that evidence
+      needed.
+    caught_by: adversarial-eval
+    enforced_by: crosscheck:echo_check
+    scope: document
+    note: >-
+      Mechanised as echo-restated. The skills line and education are excluded:
+      the skills line is deliberately redundant, which Tony calls keyword
+      insurance, and counting it would flag the one repetition doing its job.
+
+  - id: colon-enumeration-default
+    date: 2026-08-26
+    shipped: true
+    text: "six of fifteen bullets built as claim, colon, comma-separated list"
+    problem: >-
+      Named by every critic that saw more than two bullets. In one critic's
+      words, once it is a device, five times it is a template and the reader
+      stops registering what follows the colon as an argument. It is the same
+      family as uniform bullet length: a shape repeated until the eye stops
+      discriminating between bullets.
+    caught_by: adversarial-eval
+    enforced_by: crosscheck:echo_check
+    scope: document
+    note: >-
+      Counted rather than blocked, since the construction is fine and only the
+      density is the defect. Threshold set at three bullets, which is where the
+      critics started noticing.
+
+  - id: doubled-verb-opener
+    date: 2026-08-26
+    shipped: true
+    text: "Built and shipped, Planned and delivered, Scoped and built"
+    problem: >-
+      Three instances in one package, one in three others. The second verb
+      restates the first and buys nothing; a person picks one. It also spends
+      the most-read position in the F-pattern, the left edge of the bullet, on
+      a word the reader already has.
+    caught_by: adversarial-eval
+    enforced_by: crosscheck:echo_check
+    scope: document
+    note: >-
+      A closed list rather than a heuristic, so it stays precise. Extend it when
+      a new pair shows up rather than trying to detect the class generally.
+
+  - id: self-casting-role
+    date: 2026-08-26
+    shipped: true
+    text: "Was the technical voice on sales calls"
+    must_not_match: "Voiced the technical concerns on the call and scoped the fix"
+    problem: >-
+      Casting a role instead of describing an action. Distinct from self-rating:
+      "expert in X" claims a level, "the technical voice" claims a part. Three
+      blind critics flagged it across three packages, one calling it "a
+      self-flattering abstraction where the rest of the bullet is concrete".
+      The actions underneath always say it better, because a reader who
+      concludes it trusts it in a way they never trust being told.
+    caught_by: adversarial-eval
+    enforced_by: lint:self-casting
+    form: bullet
+    note: >-
+      Tony agreed on 2026-08-26 and asked for it encoded. A closed phrase list
+      beside SELF_RATING, blocking, since the fix is always available: name the
+      action.
+
+  - id: scale-boast-without-figure
+    date: 2026-08-26
+    shipped: true
+    text: "at a scale the platform had never handled"
+    must_not_match: "Ran the rollout at a scale of roughly two million users"
+    problem: >-
+      A superlative standing in for a number, in documents that give real
+      figures freely. One critic put it exactly: the rest of the page gives
+      numbers, "which makes the one place it withholds one conspicuous". On the
+      Intelligems package it was worse than conspicuous, since Selected Work
+      states roughly two million users two inches above the clause. Either the
+      figure exists, in which case use it, or it does not, in which case the
+      clause asserts importance rather than reporting it.
+    caught_by: adversarial-eval
+    enforced_by: lint:scale-boast
+    form: bullet
+    note: >-
+      Blocking. The clause also reliably wrecks the sentence it sits in: on
+      Intelligems it stranded "by comparing" three commas from the verb it
+      modified, and on Okta it created a garden path.
+
+  - id: register-spike
+    date: 2026-08-26
+    shipped: true
+    text: "latterly using AI coding tools"
+    must_not_match: "Later used AI coding tools on the last two integrations"
+    problem: >-
+      A formal Britishism inside prose that is otherwise flat and American, in
+      a document that elsewhere says "worked out", "took over" and "wired up by
+      hand". Two critics named it independently as a register spike. It is not
+      wrong, it just does not sound like the person who wrote the rest.
+    caught_by: adversarial-eval
+    enforced_by: lint:register-spike
+    form: bullet
+    note: >-
+      Advisory rather than blocking: one of these words may occasionally be the
+      right one, and the rule cannot tell. It only needs to make the writer look
+      at it.
+
+  - id: ged-shown-without-degree-requirement
+    date: 2026-08-26
+    shipped: false
+    text: "GED by examination, 1992"
+    problem: >-
+      STYLE-GUIDE already said it: the GED is included deliberately, when the
+      JD states a degree requirement, and left off when education is not at
+      issue. The Intelligems posting has no degree requirement anywhere. The
+      line went in anyway, carried by momentum from three packages that did
+      need it. Tony's read: "try-hard or something", which is exactly what an
+      unprompted credential disclosure is.
+    caught_by: human
+    enforced_by: human
+    note: >-
+      A rule that existed and was not applied. Mechanisable: finalize could
+      check the parsed JD for a credential-kind requirement and flag a GED line
+      when there is none. Cheap, and it would have caught this.
+
+  - id: rule-fires-on-its-own-cure
+    date: 2026-08-26
+    shipped: false
+    text: "at a scale the platform had never handled"
+    must_not_match: "Ran the rollout at a scale of roughly two million users"
+    problem: >-
+      scale-boast listed bare "at a scale", so it blocked a sentence carrying
+      the exact figure the rule exists to demand. Caught within minutes of
+      adding negative fixtures to the regression harness, which is the point of
+      them: a rule was being tested only on the sentence it was written to
+      catch, and a rule that fires on everything passes that test perfectly.
+    caught_by: regress
+    enforced_by: lint:scale-boast
+    form: bullet
+    note: >-
+      The list now holds only superlatives. The fixture on this entry is the
+      near-miss itself, so the harness fails the moment the rule is widened
+      again. Also found while attaching fixtures: editing defects.yaml by
+      matching a text line attached a fixture to the wrong entry, because two
+      defects shared the text. Anchor edits by id.

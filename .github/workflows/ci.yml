@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -e ".[dev]"
+      # The contract tests, on the fictional sample corpus. Historical tests
+      # written against the original author's record skip here by design.
+      - run: python -m pytest -q
+      # Every defect on record is replayed against the live gates. The number
+      # that must not move is "no longer caught: 0".
+      - run: python tools/regress.py
+      # The sample run must clear every gate. A gate that blocks here is
+      # either wrong or the sample is, and both are bugs.
+      - name: gates on the sample run
+        run: |
+          python -m careerkit.cli lint examples/sample-run/resume.md --jd examples/sample-run/jd-parsed.json
+          python tools/crosscheck.py examples/sample-run
+          python tools/citecheck.py examples/sample-run
+          python tools/ats_check.py examples/sample-run
+          python tools/screen_check.py examples/sample-run
+          python tools/echo_check.py examples/sample-run
+      - run: python -m ruff check careerkit tools tests

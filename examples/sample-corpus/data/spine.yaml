@@ -1,0 +1,77 @@
+# Timeline spine: human-authored ground truth for a FICTIONAL person.
+#
+# Morgan Vale does not exist. Every employer, date, figure and email here was
+# invented so the engine and the gates can run on a fresh clone without
+# anyone's real record. Copy this directory to start your own corpus, then
+# replace every line. The machine may audit this file and flag it; it never
+# writes to it.
+
+identity:
+  legal_name: Morgan A. Vale
+  goes_by: Morgan
+  resume_header: Morgan Vale
+  email: morgan.vale@example.com
+  phone: 503.555.0142
+  linkedin: linkedin.com/in/morganvale-example
+  location: Portland, OR
+  notes:
+    - Fictional. See the header comment.
+
+roles:
+  - id: helpdesk-early
+    org: Cascade Credit Union
+    title: Tier-1 Help Desk
+    start: "2009"
+    end: "2011"
+    render_notes:
+      - Compresses to a single "Earlier:" line on most resumes.
+
+  - id: staffing-contract
+    org: a staffing agency
+    title: "[short contract]"
+    start: ~2011
+    end: ~2012
+    render_notes:
+      - Omit from resumes. Not worth mentioning; timeline-filler only.
+    notes:
+      - Six weeks of desktop imaging between roles. Kept so the timeline has no gap.
+
+  - id: northwind
+    org: Northwind Logistics
+    title: Integration Support Engineer
+    start: "2012"
+    end: "2016"
+    corrections:
+      - Start is 2012, not 2013. The old LinkedIn profile had it wrong.
+
+  - id: brightline
+    org: Brightline Health
+    title: Solutions Engineer
+    titles: [Implementation Engineer, Solutions Engineer]
+    start: "2016"
+    end: "2023"
+    notes:
+      - Hired as Implementation Engineer; promoted to Solutions Engineer in 2019.
+    render_notes:
+      - >-
+        Promotion renders as "Solutions Engineer (promoted from Implementation
+        Engineer)". Never render the two titles as two roles.
+
+  - id: lantern
+    org: Lantern Analytics
+    title: Senior Solutions Engineer
+    start: Mar 2023
+    end: Jun 2026
+    corrections:
+      - Ended Jun 2026; never "Present".
+
+education:
+  items:
+    - Certificate, Software Development, Portland Community College, 2012.
+    - >-
+      No degree. No industry certifications; the Okta and Microsoft items on
+      the LinkedIn profile are course completions and must never render as
+      certifications.
+  framing: >-
+    Frame the certificate-plus-work path as a strength (self-taught, learns
+    on the job). Never hide it, never apologise for it.

@@ -1,0 +1,65 @@
+# Skill alias/taxonomy table ONLY.
+# A skill EXISTS iff >=1 evidence unit carries the canonical tag — skills are
+# never declared here. Proficiency is computed (unit count x tier diversity x
+# time span x recency), displayed, never hand-set.
+# This table maps JD language to canonical tags. It grows by confirmation:
+# unknown JD terms are flagged, the person approves the mapping. Never guessed silently.
+# DRAFT starter set, pending confirmation.
+
+aliases:
+  sso: [single sign-on, saml, shibboleth, identity management, authentication,
+        azure ad, active directory, entra id, identity federation]
+  idp-configuration: [okta, azure ad administration, identity provider configuration,
+                      saml configuration, claim expressions, idp setup, entra admin]
+  scim: [user provisioning, identity provisioning, directory sync, user lifecycle management]
+  security: [security questionnaires, security review, infosec, customer security]
+  lms-integration: [learning management system, lms, scorm, aicc]
+  xapi: [experience api, tin can, learning analytics, learning record store, lrs]
+  enterprise-integration: [systems integration, api integration, integration architecture]
+  data-contracts: [data mapping, data ingestion, api specifications]
+  reporting: [analytics reporting, business intelligence, data reporting]
+  data-quality: [data health, data alignment, reporting accuracy]
+  escalation-management: [escalations, critical accounts, customer rescue]
+  ticketing: [jira, jira software, issue tracking, ticket tracking, work tracking]
+  ipaas: [workato, integration platform as a service, low-code integration,
+          workflow automation platform]
+  serverless: [azure functions, function apps, cloud functions, serverless]
+  voice-ai: [telephony, voice agents, voice-enabled ai, conversational voice,
+             ivr]
+  debugging: [troubleshooting, root cause analysis, triage, diagnostics, log analysis, fault isolation]
+  stakeholder-guidance: [discovery, requirements gathering, technical advisory, solution design]
+  enablement: [technical enablement, training delivery, knowledge transfer, documentation]
+  public-speaking: [keynotes, technical talks, presenting, conference talks, live demos, ama]
+  sme: [subject matter expert, technical expert]
+  customer-facing: [client-facing, customer engagement, consulting]
+  front-end: [frontend, web development, ui development]
+  react: [react.js, reactjs, jsx, react hooks]
+  typescript: []
+  javascript: [js, es6, ecmascript, vanilla js]
+  node: [node.js, nodejs, npm, server-side javascript]
+  angular: [angularjs, angular 2+]
+  java: [jackson, java streams]
+  python: []
+  csharp: [c#, asp.net, .net]
+  php: []
+  mysql: [sql, relational databases]
+  tdd: [test-driven development, test-first, unit testing]
+  playwright: [end-to-end testing, browser automation, e2e testing]
+  ci-cd: [continuous integration, github actions, devops]
+  telemetry: [instrumentation, analytics instrumentation, event tracking]
+  developer-experience: [dx, api design, sdk design, library design]
+  infrastructure: [infra, on-prem, colocation, sysadmin]
+  networking: [network engineering, firewalls, load balancing, nat, routing, tcp/ip, packet capture, vpn]
+  aws: [cloud, amazon web services]
+  full-stack: [full stack development]
+  migration: [re-platforming, legacy modernization, system migration]
+  e-commerce: [billing systems, payment workflows]
+  email-systems: [email marketing, bulk email]
+  llm-integration: [ai integration, tool use, function calling, prompt engineering]
+  rag: [retrieval augmented generation, vector search]
+  agentic-development: [claude code, ai-assisted development, agentic coding]
+  ux: [user experience, usability, ux research]
+  mobile-web: [responsive design, mobile development]
+  technical-writing: [runbooks, knowledgebase, documentation]
+  qa: [quality assurance, hardware testing, test automation]
+  technical-support: [tier-2 support, customer support]

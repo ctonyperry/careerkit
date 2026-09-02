@@ -1,0 +1,16 @@
+# Negative evidence: things the person has CONFIRMED they have NOT done.
+# A skill listed here is reported DECLINED in coverage: it never generates a
+# recovery question again, and it feeds a strategy note instead.
+declined:
+  - text: >-
+      No infrastructure operations. Has never run Kubernetes, managed cloud
+      accounts, or been on call for production infrastructure.
+    skills: [infrastructure, aws]
+    date: "2026-08-01"
+    note: Confirmed by Morgan during the first spine interview.
+  - text: >-
+      No industry certifications. The Okta and Microsoft items on the LinkedIn
+      profile are course completions.
+    skills: []
+    date: "2026-08-01"
+    note: Credential requirements asking for certifications get a strategy note.

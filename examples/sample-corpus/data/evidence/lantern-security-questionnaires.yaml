@@ -1,0 +1,23 @@
+id: lantern-security-questionnaires
+role: lantern
+narrative: >-
+  Answered enterprise security questionnaires during procurement and
+  coordinated SOC 2 evidence requests with the compliance lead. Became the
+  escalation point for security questions that ran past the standard security
+  packet.
+metrics: []
+skills: [security, customer-facing, escalation-management]
+tier: DOC
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: null
+render_notes:
+  - >-
+    Morgan answered questionnaires and coordinated evidence. Morgan did not
+    run the SOC 2 audit and never held a compliance title. Render as
+    coordination, never as ownership of the audit.
+verify:
+  - >-
+    Whether the SOC 2 bridge letter customers received was drafted by Morgan
+    or by the compliance lead. Morgan remembers editing it, not writing it.

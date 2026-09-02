@@ -1,0 +1,15 @@
+id: brightline-runbook
+role: brightline
+narrative: >-
+  Wrote the integration runbook and the debugging guide that Brightline's
+  support engineers use to triage the common sync failures without
+  escalating. Became the standing SME for the integration layer.
+metrics: []
+skills: [enablement, debugging, sme, technical-writing]
+tier: DOC
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: null
+render_notes: []
+verify: []

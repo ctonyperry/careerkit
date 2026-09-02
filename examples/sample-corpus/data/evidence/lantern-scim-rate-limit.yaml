@@ -1,0 +1,31 @@
+id: lantern-scim-rate-limit
+role: lantern
+narrative: >-
+  The SCIM provisioning sync began failing partway through a roughly 300,000-user
+  rollout for a retail customer. Had the customer's IT team surface their sync
+  logs, compared them against Lantern's ingestion logs, and traced the failures
+  to rate limiting on the ingestion pipeline. Fixed the pipeline and re-ran the
+  sync with their IT team.
+car:
+  challenge: Provisioning sync failing mid-rollout at a user count the platform had not seen.
+  action: Compared customer sync logs against ingestion logs; found rate limiting; fixed the pipeline.
+  result: Rollout completed across the customer's store network.
+metrics:
+  - {value: "roughly 300,000 users", tier: PRIMARY}
+  - {value: "$4M contract", tier: MEMORY, doubted: true}
+skills: [scim, debugging, escalation-management, customer-facing]
+tier: PRIMARY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+do_not_print: ["$4M", "4M"]
+render_notes:
+  - >-
+    DO NOT PRINT the contract value. Morgan, 2026-08-01: "I think it was four
+    million but I never saw the paper." The user count is undoubted and carries
+    the scale on its own.
+  - >-
+    Rate limiting is the confirmed root cause and is interview-defensible.
+    Never render as "re-architected the platform"; the fix was a pipeline
+    change and a re-run.
+verify: []

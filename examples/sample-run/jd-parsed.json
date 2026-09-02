@@ -1,0 +1,19 @@
+{
+  "source": "examples/sample-corpus/jd/halcyon-solutions-engineer.md",
+  "title_to_mirror": "Solutions Engineer",
+  "role_family": "solutions-engineering",
+  "seniority": "mid-to-senior (5+ years customer-facing)",
+  "company": "Halcyon Robotics",
+  "register": null,
+  "requirements": [
+    {"id": "tenure", "text": "5+ years in a customer-facing technical role (solutions engineering, implementation, or technical consulting)", "skills": ["customer-facing"], "weight": "required", "kind": "tenure"},
+    {"id": "sso-scim", "text": "Hands-on experience with SSO (SAML, OIDC) and SCIM provisioning", "skills": ["sso", "scim"], "weight": "required"},
+    {"id": "debug-from-logs", "text": "Experience debugging integrations from logs, and explaining what you found to both engineers and customers", "skills": ["debugging", "escalation-management"], "weight": "required"},
+    {"id": "data-contracts", "text": "Experience writing data contracts or API specifications with customers", "skills": ["data-contracts", "enterprise-integration"], "weight": "required"},
+    {"id": "security-questionnaires", "text": "Comfort answering enterprise security questionnaires", "skills": ["security"], "weight": "required"},
+    {"id": "degree", "text": "Bachelor's degree in Computer Science or equivalent experience", "skills": [], "weight": "required", "kind": "credential"},
+    {"id": "enablement", "text": "Experience running or contributing to a technical enablement program", "skills": ["enablement"], "weight": "preferred"},
+    {"id": "infra", "text": "Experience with Kubernetes or cloud infrastructure operations", "skills": ["infrastructure"], "weight": "preferred"}
+  ],
+  "unknown_terms": ["Halcyon Fleet API", "ROS 2"]
+}

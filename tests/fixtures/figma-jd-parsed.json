@@ -1,0 +1,52 @@
+{
+  "source": "examples/figma-jd.md",
+  "title_to_mirror": "Solutions Consultant",
+  "role_family": "solutions-consulting",
+  "seniority": "senior (8+ years professional, 4+ years SE/SC)",
+  "register": null,
+  "requirements": [
+    {
+      "id": "se-experience",
+      "text": "4+ years sales engineering / solution consulting in SaaS",
+      "skills": ["customer-facing", "stakeholder-guidance"],
+      "weight": "required"
+    },
+    {
+      "id": "security-it-ownership",
+      "text": "Owns the customer IT and Security relationship during the deal cycle (security questionnaires, RFIs, RFPs, identity, enterprise questions)",
+      "skills": ["security", "sso", "scim"],
+      "weight": "required"
+    },
+    {
+      "id": "demos-solution-design",
+      "text": "Leads technical discussions, demos, and solution design",
+      "skills": ["stakeholder-guidance", "sme"],
+      "weight": "required"
+    },
+    {
+      "id": "cross-functional",
+      "text": "Partners with Sales and cross-functional teams; collaborates with Product/Support",
+      "skills": ["enablement", "escalation-management"],
+      "weight": "required"
+    },
+    {
+      "id": "front-end",
+      "text": "Front-end development or developer-lifecycle experience",
+      "skills": ["front-end", "developer-experience"],
+      "weight": "required"
+    },
+    {
+      "id": "enterprise-saas",
+      "text": "Enterprise SaaS ecosystem familiarity",
+      "skills": ["enterprise-integration"],
+      "weight": "required"
+    },
+    {
+      "id": "figma-ux",
+      "text": "Figma/UX experience a bonus",
+      "skills": ["ux"],
+      "weight": "preferred"
+    }
+  ],
+  "unknown_terms": ["RFIs", "RFPs"]
+}

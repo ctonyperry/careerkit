@@ -1,0 +1,19 @@
+id: lantern-reporting
+role: lantern
+supersedes: lantern-reporting-old
+narrative: >-
+  Redesigned the customer reporting export after several tenants reported
+  totals that disagreed with the dashboard. Traced the mismatch to two
+  different definitions of an active user, then wrote the data contract the
+  export now follows and got both product teams to sign it.
+metrics: []
+skills: [reporting, data-quality, data-contracts, stakeholder-guidance]
+tier: DOC
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+history:
+  - {date: "2026-08-01", text: "Replaced lantern-reporting-old: the work was a redesign and a contract, not a bug fix."}
+render_notes:
+  - The contract is a document Morgan wrote and can produce. Safe to name it.
+verify: []

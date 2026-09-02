@@ -1,0 +1,19 @@
+# A complete run against the sample corpus. Every gate in tools/ should pass
+# on this directory; if one does not, either the gate or this run is wrong.
+company: Halcyon Robotics
+role: Solutions Engineer
+jd: examples/sample-corpus/jd/halcyon-solutions-engineer.md
+parsed_jd: jd-parsed.json
+captured: 2026-08-12
+status: sample
+verdict: fits the function; the domain is new
+verdict_notes: >-
+  Five of six required rows HIT. The degree is a credential with "or
+  equivalent experience", so it is boilerplate rather than a gate.
+  Infrastructure operations is DECLINED and preferred, so it is named in the
+  cover letter rather than worked around. Robotics is zero and the JD does not
+  ask for it.
+resume: resume.md
+claim_sheet: claim-sheet.md
+documents:
+  - resume.md

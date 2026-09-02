@@ -1,0 +1,14 @@
+id: helpdesk-tickets
+role: helpdesk-early
+narrative: >-
+  Tier-1 help desk for a credit union: password resets, workstation imaging,
+  and the ticket queue.
+metrics: []
+skills: [technical-support, ticketing]
+tier: PRIMARY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+render_notes:
+  - Earlier line only. Never a bullet.
+verify: []

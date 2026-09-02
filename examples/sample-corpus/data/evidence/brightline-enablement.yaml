@@ -1,0 +1,14 @@
+id: brightline-enablement
+role: brightline
+narrative: >-
+  Ran onboarding workshops for new implementation engineers, twice a year,
+  covering the integration layer end to end.
+metrics: []
+skills: [enablement, public-speaking]
+tier: MEMORY
+status: provisional
+render_notes: []
+verify:
+  - How many workshops, and whether they were the whole onboarding or one session of it.
+# Recovered in a gap interview on 2026-08-10. Morgan has not yet confirmed the
+# scope, so this stays provisional and any resume using it is a DRAFT.

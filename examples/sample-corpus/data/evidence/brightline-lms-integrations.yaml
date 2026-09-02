@@ -1,0 +1,18 @@
+id: brightline-lms-integrations
+role: brightline
+narrative: >-
+  Built LMS integrations for hospital training programs on the Brightline
+  Health platform, mapping course-completion data from SCORM packages into
+  each customer's compliance reports. Wrote the field mapping with each
+  customer's training coordinator, and set up SAML single sign-on between the
+  platform and each hospital's identity provider as part of every rollout.
+metrics: []
+skills: [lms-integration, sso, enterprise-integration, data-contracts, reporting, customer-facing]
+tier: PRIMARY
+status: confirmed
+confirmed_on: "2026-08-01"
+confirmed_by: Morgan
+link: null
+render_notes:
+  - Hospital customers stay unnamed on documents. "hospital training programs" is the bound.
+verify: []
