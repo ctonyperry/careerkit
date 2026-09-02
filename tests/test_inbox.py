@@ -17,7 +17,8 @@ TODAY = dt.date(2026, 9, 2)
 
 
 def test_capture_is_written_verbatim_with_the_pipeline_frontmatter(tmp_path: Path) -> None:
-    text = "Solutions Engineer\n\nWhat you will do\n- Own the technical relationship: from day one.\n"
+    text = ("Solutions Engineer\n\nWhat you will do\n"
+            "- Own the technical relationship: from day one.\n")
     path, written = write_capture(tmp_path, {
         "company": "Halcyon Robotics", "role": "Solutions Engineer",
         "url": "https://example.com/jobs/1", "text": text,
