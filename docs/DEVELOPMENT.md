@@ -199,7 +199,13 @@ person is the only gate with access to the truth.
    a parse that uses a tag the alias table does not know, because an
    invented tag is how a MISS turns into a HIT (defect
    jd-parse-invented-tag, 2026-08-25).
-10. **Cross-run drift.** The same unit rendered as "developer zero" in one
+10. ~~Deciding unmapped language.~~ **Done 2026-09-02.** Fifteen parses
+    produced a hundred-odd unmapped terms and the only mechanism was a
+    sentence in a prompt saying the person confirms each. `careerkit terms`
+    queues them across the inbox; a decision is alias, gap or ignore, with
+    a note, recorded once in `terms.yaml`. A gap scores as a MISS from then
+    on, which is the first time "unmapped" turns into an honest number.
+11. **Cross-run drift.** The same unit rendered as "developer zero" in one
    package and "first developer" in another. Visible now only by hand.
 
 Not on the list: anything that has not yet hurt in a real run.

@@ -43,6 +43,7 @@ stderr.
 ## The pipeline, on a run directory
 
     python -m careerkit.cli inbox --serve                  # capture button; `inbox` lists pending
+    python -m careerkit.cli terms                          # unmapped language: queue, then decide
     python -m careerkit.cli triage                         # the inbox ranked; parses validated
     python -m careerkit.cli verdict --jd <jd-parsed.json>   # first, before drafting
     python -m careerkit.cli lint <resume.md> --jd <jd-parsed.json>

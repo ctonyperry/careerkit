@@ -16,6 +16,7 @@ from pathlib import Path
 from careerkit.brief import RenderKnobs, build_brief, render_brief
 from careerkit.coverage import assess_jd
 from careerkit.dataload import (
+    load_aliases,
     load_declined,
     load_parsed_jd,
     load_spine,
@@ -122,8 +123,11 @@ def _cmd_verdict(args: argparse.Namespace) -> int:
 
     data_dir = _data_dir(args)
     jd = load_parsed_jd(Path(args.jd))
+    from careerkit.terms import load_terms
+
     v = build_verdict(jd, load_units(data_dir / "evidence"), load_spine(data_dir / "spine.yaml"),
-                      load_declined(data_dir / "declined.yaml"))
+                      load_declined(data_dir / "declined.yaml"),
+                      load_terms(data_dir / "terms.yaml"))
     text = render(v)
     if args.out:
         Path(args.out).write_text(text, encoding="utf-8")
@@ -211,6 +215,44 @@ def _cmd_triage(args: argparse.Namespace) -> int:
         print(f"Wrote {args.out}")
     else:
         print(text)
+    return 0
+
+
+def _cmd_terms(args: argparse.Namespace) -> int:
+    import os
+
+    from careerkit.terms import TermDecision, build_queue, load_terms, record, render_queue
+
+    data_dir = _data_dir(args)
+    terms_path = data_dir / "terms.yaml"
+    decided = [(k, getattr(args, k)) for k in ("alias", "gap", "ignore") if getattr(args, k)]
+    if len(decided) > 1:
+        print("one decision per call", file=sys.stderr)
+        return 2
+    if decided:
+        kind, term = decided[0]
+        if kind == "alias" and not args.tag:
+            print("--alias needs the tag: careerkit terms --alias <term> <tag>", file=sys.stderr)
+            return 2
+        try:
+            record(terms_path, TermDecision(term=term, decision=kind, tag=args.tag,
+                                            note=args.note or ""))
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        print(f"recorded: {term!r} -> {kind}" + (f" {args.tag}" if args.tag else ""))
+        return 0
+    root = args.dir or os.environ.get("CAREERKIT_RUNS")
+    if not root:
+        print("give --dir or set CAREERKIT_RUNS to the directory holding jd-inbox/",
+              file=sys.stderr)
+        return 2
+    inbox = Path(root)
+    if inbox.name != "jd-inbox":
+        inbox = inbox / "jd-inbox"
+    parsed = sorted(inbox.glob("*-parsed.json"))
+    queue = build_queue(parsed, load_terms(terms_path), load_aliases(data_dir / "skills.yaml"))
+    print(render_queue(queue))
     return 0
 
 
@@ -381,6 +423,18 @@ def main(argv: list[str] | None = None) -> int:
     triage.add_argument("--data", default=None, help=_DATA_HELP)
     triage.add_argument("--out", default=None, help="write markdown here instead of stdout")
     triage.set_defaults(func=_cmd_triage)
+
+    terms = sub.add_parser("terms", help="unmapped posting language: the queue, and decisions")
+    terms.add_argument("--dir", default=None,
+                       help="jd-inbox directory or its parent (default: $CAREERKIT_RUNS)")
+    terms.add_argument("--data", default=None, help=_DATA_HELP)
+    terms.add_argument("--alias", metavar="TERM", help="the term means an existing tag")
+    terms.add_argument("tag", nargs="?", default=None, help="the tag, with --alias")
+    terms.add_argument("--gap", metavar="TERM",
+                       help="a real skill the person lacks; scores as MISS")
+    terms.add_argument("--ignore", metavar="TERM", help="not a skill, or not relevant")
+    terms.add_argument("--note", default=None, help="in the person's words")
+    terms.set_defaults(func=_cmd_terms)
 
     prep = sub.add_parser(
         "prep", help="interview prep sheet from a run: bounds, open items, probes"

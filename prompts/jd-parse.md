@@ -11,7 +11,9 @@ as `<jd-name>-parsed.json`. Then run:
 - `requirements[].skills` may ONLY use canonical tags that exist under
   `aliases:` in `data/skills.yaml`. Do not invent tags.
 - JD language you cannot map to a canonical tag goes in `unknown_terms`.
-  The author confirms each as a new alias (or dismisses it); never guess silently.
+  `careerkit terms` queues those for the author to decide: alias, gap, or
+  ignore, recorded in `data/terms.yaml`. Never guess silently; a term the
+  author already decided will not be asked again.
 - `title_to_mirror`: the closest honest mirror of the JD's title
   (e.g. JD "Solutions Consultant" + actual title "Technical Consultant"
   mirrors as "Technical Solutions Consultant").

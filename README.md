@@ -85,6 +85,7 @@ The number that must not move is `no longer caught: 0`.
 | Part | What it does | What it cannot see |
 |---|---|---|
 | `careerkit triage` | Every pending posting in the inbox: parse validated against the alias table, verdict computed, ranked. Pick from one table, not fifteen files. | Whether you want the job, and a wrong parse that uses real tags. |
+| `careerkit terms` | Posting language no parse could map, queued across the inbox with counts and a suggested tag. Each decision is a fact: alias (the table grows), gap (scores as a MISS from now on, never asked again), ignore. Flags, so a chat or a screen can drive it. | A term that means a skill you have but no unit records; that is a unit to write. |
 | `careerkit verdict` | The fit call, computed before any drafting: required capabilities by status, tenure from the timeline, a stated credential with or without an equivalence clause, and one of three answers: apply, apply and name the gap, or a gate you do not meet. | Whether you want the job, and whether a HIT is the story worth telling. |
 | `careerkit gap` | Coverage per requirement: HIT, THIN, MISS, DECLINED. Recovery questions for the gaps. Tenure computed from the timeline, never typed. | Whether a HIT is the right story to tell. |
 | `careerkit resume` | Selects units under a length budget and writes the brief the LLM drafts from. Provisional evidence makes the brief a DRAFT. | Prose quality. It writes no prose. |
@@ -119,6 +120,8 @@ The corpus is three files and a directory:
   answer. It stops the question being asked again and turns into a strategy
   note instead.
 - `data/skills.yaml`, the alias table that maps posting language to your tags.
+- `data/terms.yaml`, your decisions about language the parse could not map:
+  alias, gap, or ignore, each with a note and a date.
 
 Start from the fictional one, replace every line, and point at it:
 
@@ -166,11 +169,16 @@ bookmarklet is a page script. The posting crosses to the receiver by
    the posting into requirements tagged with your alias table, written
    beside it as `<name>-parsed.json`. Unmapped language goes to
    `unknown_terms`, never to an invented tag.
-3. **Triage.** `careerkit triage` runs the verdict on every parsed posting,
+3. **Decide the language.** `careerkit terms` lists every term no parse
+   could map, across the whole inbox, with how many postings use it and a
+   suggested tag. Each decision is recorded once in `terms.yaml` in your
+   words: an alias grows the table, a gap scores as a MISS from then on, an
+   ignore stops it appearing. Nothing is asked twice.
+4. **Triage.** `careerkit triage` runs the verdict on every parsed posting,
    rejects any parse that uses a tag the table does not know, and ranks the
    inbox: apply, apply and name the gap, a gate you do not meet, then the
    parses to fix and the postings still to parse.
-4. **Pick one and run it.** Gap report, claim sheet, draft, gates, panel,
+5. **Pick one and run it.** Gap report, claim sheet, draft, gates, panel,
    your sign-off, then `prep` for the interview and `outcomes` for what
    came back.
 

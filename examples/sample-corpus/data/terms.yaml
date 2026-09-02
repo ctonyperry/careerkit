@@ -1,0 +1,17 @@
+# Decisions about posting language the parse could not map.
+# alias: means a tag the record has. gap: a skill the person lacks; scores
+# as a MISS. ignore: not a skill or not relevant. Grows only by the person.
+terms:
+  - term: identity provider
+    decision: alias
+    tag: idp-configuration
+    note: Same work as the Okta and Entra rollouts.
+    date: "2026-08-12"
+  - term: ROS 2
+    decision: gap
+    note: Never touched a robot. Say so if asked.
+    date: "2026-08-12"
+  - term: Halcyon Fleet API
+    decision: ignore
+    note: Their product. Nobody outside has it.
+    date: "2026-08-12"

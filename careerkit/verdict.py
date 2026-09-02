@@ -21,6 +21,7 @@ from careerkit.coverage import CoverageStatus, RequirementCoverage, assess_jd
 from careerkit.jd import ParsedJD
 from careerkit.models import DeclinedRecord, EvidenceUnit, Spine
 from careerkit.strategy import strategy_notes, tenure_findings
+from careerkit.terms import GAP_PREFIX, TermDecision, apply_decisions
 
 Recommendation = Literal["apply", "name-the-gap", "unmapped", "hard-gate"]
 
@@ -63,6 +64,8 @@ def _weak_detail(cov: RequirementCoverage, declined_text: dict[str, str]) -> str
             parts.append(f"{s.skill}: declined ({declined_text.get(s.skill, 'on record')})")
         elif s.status is CoverageStatus.THIN:
             parts.append(f"{s.skill}: rests on {', '.join(s.unit_ids) or 'nothing recent'}")
+        elif s.skill.startswith(GAP_PREFIX):
+            parts.append(f"{s.skill[len(GAP_PREFIX):]}: a gap you recorded")
         else:
             parts.append(f"{s.skill}: nothing in the record")
     return f"{cov.requirement.text}. " + "; ".join(parts) if parts else cov.requirement.text
@@ -73,8 +76,10 @@ def build_verdict(
     units: list[EvidenceUnit],
     spine: Spine,
     declined: list[DeclinedRecord] | None = None,
+    terms: list[TermDecision] | None = None,
 ) -> Verdict:
     declined = declined or []
+    jd = apply_decisions(jd, terms or [])
     declined_text = {s: r.text for r in declined for s in r.skills}
     coverages = assess_jd(jd, units, spine, declined)
 
@@ -112,7 +117,8 @@ def build_verdict(
             if c.status in (CoverageStatus.MISS, CoverageStatus.DECLINED)]
     probing = [_weak_detail(c, declined_text) for c in required if c.status is CoverageStatus.THIN]
     say_no = [_weak_detail(c, declined_text) for c in preferred
-              if c.status is CoverageStatus.DECLINED]
+              if c.status is CoverageStatus.DECLINED
+              or any(s.skill.startswith(GAP_PREFIX) for s in c.skills)]
 
     hits = sum(1 for c in required if c.status is CoverageStatus.HIT)
     if hard_gates:

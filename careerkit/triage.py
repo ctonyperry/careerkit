@@ -26,6 +26,7 @@ from careerkit.dataload import (
     load_units,
 )
 from careerkit.inbox import pending
+from careerkit.terms import load_terms
 from careerkit.verdict import Verdict, build_verdict
 
 _ORDER = {"apply": 0, "name-the-gap": 1, "unmapped": 2, "hard-gate": 3, "parse-invalid": 4,
@@ -65,6 +66,7 @@ def build_triage(inbox: Path, data_dir: Path) -> Triage:
     units = load_units(data_dir / "evidence")
     declined = load_declined(data_dir / "declined.yaml")
     canonical = frozenset(load_aliases(data_dir / "skills.yaml").canonical_tags)
+    terms = load_terms(data_dir / "terms.yaml")
 
     rows: list[TriageRow] = []
     for name, company, role in pending(inbox):
@@ -78,7 +80,7 @@ def build_triage(inbox: Path, data_dir: Path) -> Triage:
             rows.append(TriageRow(file=name, company=company, role=role, state="parse-invalid",
                                   parsed=pp.name, bad_tags=bad))
             continue
-        v = build_verdict(load_parsed_jd(pp), units, spine, declined)
+        v = build_verdict(load_parsed_jd(pp), units, spine, declined, terms)
         rows.append(TriageRow(file=name, company=company, role=role, state=v.recommendation,
                               parsed=pp.name, verdict=v))
     rows.sort(key=lambda r: (r.rank, -_score(r), _terms(r), r.file))
