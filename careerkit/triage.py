@@ -81,7 +81,7 @@ def build_triage(inbox: Path, data_dir: Path) -> Triage:
         v = build_verdict(load_parsed_jd(pp), units, spine, declined)
         rows.append(TriageRow(file=name, company=company, role=role, state=v.recommendation,
                               parsed=pp.name, verdict=v))
-    rows.sort(key=lambda r: (r.rank, -_hits(r), _unmapped(r), r.file))
+    rows.sort(key=lambda r: (r.rank, -_score(r), _terms(r), r.file))
     return Triage(rows=rows)
 
 
@@ -91,6 +91,19 @@ def _hits(row: TriageRow) -> int:
 
 def _unmapped(row: TriageRow) -> int:
     return len(row.verdict.unmapped_required) if row.verdict else 0
+
+
+def _terms(row: TriageRow) -> int:
+    return len(row.verdict.unknown_terms) if row.verdict else 0
+
+
+def _score(row: TriageRow) -> float:
+    """Answered minus unanswered, thin counting half. Only for ordering rows
+    that share a verdict; it is not a fit score and is not printed as one."""
+    if not row.verdict:
+        return 0.0
+    c = row.verdict.required_counts
+    return c.get("HIT", 0) + c.get("THIN", 0) / 2 - _unmapped(row) - c.get("MISS", 0)
 
 
 def _cell(text: str) -> str:
@@ -125,6 +138,13 @@ def render(t: Triage) -> str:
         counts[r.state] = counts.get(r.state, 0) + 1
     ordered = sorted(counts.items(), key=lambda kv: _ORDER.get(kv[0], 9))
     out.append(", ".join(f"{n} {k}" for k, n in ordered) + ".")
+    gaps = [(r, r.verdict.unmapped_required) for r in t.rows
+            if r.verdict and r.verdict.unmapped_required]
+    if gaps:
+        out += ["", "## Required wants the record has no tag for", "",
+                "Each is an alias to add or a gap to accept; the verdict counts none of them.", ""]
+        for r, wants in gaps:
+            out.append(f"- **{_cell(r.company)}**: " + " / ".join(w[:70] for w in wants))
     unparsed = [r.file for r in t.rows if r.state == "unparsed"]
     if unparsed:
         out += ["", "Parse next (prompts/jd-parse.md, output beside the posting "
