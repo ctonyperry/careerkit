@@ -187,7 +187,13 @@ person is the only gate with access to the truth.
    fields the person fills in when something comes back. Also `careerkit
    init`, because the README's "copy the sample and replace every line" was
    an instruction, and instructions get skipped.
-8. **Cross-run drift.** The same unit rendered as "developer zero" in one
+8. ~~The capture button.~~ **Done 2026-09-02.** Every run began with a posting
+   pasted into chat and a skill that wrote it to disk, which meant a session
+   open and a sentence typed. `careerkit inbox --serve` is a local receiver
+   plus a bookmarklet: one click on the posting, one verbatim file in
+   `jd-inbox/`, never overwritten. Asked for in so many words: "I go to a
+   job listing page, press a button, and it goes to the jd inbox."
+9. **Cross-run drift.** The same unit rendered as "developer zero" in one
    package and "first developer" in another. Visible now only by hand.
 
 Not on the list: anything that has not yet hurt in a real run.

@@ -90,6 +90,7 @@ The number that must not move is `no longer caught: 0`.
 | `careerkit lint` | Em dashes, self-rating, self-casting, scale boasts, numbers with no source, education not in the spine, phrases marked never-print. | A real fact omitted. |
 | `careerkit finalize` | Provisional units and open verify items on the selection. | An override the writer made after the selection. |
 | `careerkit prep` | The night-before sheet for a run: every cited unit with the bounds you set on it, the figures you doubt, what is still marked verify, and the requirements where the questions will land, with your own declined answer where you have one. | A probe about something the page does not claim. |
+| `careerkit inbox` | The capture button: a local receiver and a bookmarklet that writes the posting to jd-inbox verbatim, with frontmatter, never overwriting. | Whether the page was the whole posting; sites fold the rest behind a button. |
 | `careerkit outcomes` | Every run in one table: captured, status, sent, and what came back, with your own notes on why. | Why, until you write it down. |
 | `careerkit stale` | What in the record has not been re-confirmed, oldest and weakest first. | Whether a fact went stale without anyone noticing. |
 | `tools/citecheck.py` | Every distinctive term in every bullet must appear in the unit that bullet cites. | A bullet that misrepresents a unit using only that unit's own words. |
@@ -134,6 +135,21 @@ why. That table is the record that outlives the search.
 and career changes. `docs/STYLE-GUIDE.md` holds every writing rule with the
 defect that caused it. `docs/DEVELOPMENT.md` is how the project improves
 itself, and the order things get built in.
+
+## Capturing a posting
+
+One button. Start the receiver, drag the link it shows onto the bookmarks
+bar, and click it on any posting on LinkedIn, Indeed, or a company site.
+
+```bash
+python -m careerkit.cli inbox --serve
+```
+
+It confirms company and role, sends the page text verbatim, writes
+`jd-inbox/YYYY-MM-DD-company-role.md` with the frontmatter the pipeline reads,
+and never overwrites. Verbatim matters: the anti-contamination check quotes
+the posting from that file later, and a paraphrased capture poisons the run.
+`careerkit inbox` on its own lists what is waiting.
 
 ## Drafting
 

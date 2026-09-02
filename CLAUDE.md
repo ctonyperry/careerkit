@@ -42,6 +42,7 @@ stderr.
 
 ## The pipeline, on a run directory
 
+    python -m careerkit.cli inbox --serve                  # capture button; `inbox` lists pending
     python -m careerkit.cli verdict --jd <jd-parsed.json>   # first, before drafting
     python -m careerkit.cli lint <resume.md> --jd <jd-parsed.json>
     python -m careerkit.cli finalize <resume.md> --jd <jd-parsed.json>

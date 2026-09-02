@@ -166,6 +166,32 @@ sample evidence and write your own, one unit per thing you did. Then:
     return 0
 
 
+def _cmd_inbox(args: argparse.Namespace) -> int:
+    import os
+
+    from careerkit.inbox import DEFAULT_PORT, pending, serve
+
+    root = args.dir or os.environ.get("CAREERKIT_RUNS")
+    if not root:
+        print("give --dir or set CAREERKIT_RUNS to the directory holding jd-inbox/",
+              file=sys.stderr)
+        return 2
+    inbox = Path(root)
+    if inbox.name != "jd-inbox":
+        inbox = inbox / "jd-inbox"
+    if args.serve:
+        serve(inbox, args.port or DEFAULT_PORT, open_browser=not args.no_browser)
+        return 0
+    rows = pending(inbox)
+    if not rows:
+        print(f"nothing pending in {inbox}")
+        return 0
+    for name, company, role in rows:
+        print(f"{name:<60} {company} / {role}")
+    print(f"{len(rows)} pending")
+    return 0
+
+
 def _cmd_prep(args: argparse.Namespace) -> int:
     from careerkit.prep import build_prep, render
 
@@ -315,6 +341,17 @@ def main(argv: list[str] | None = None) -> int:
     init = sub.add_parser("init", help="copy the sample corpus to start your own")
     init.add_argument("dest", help="directory to create")
     init.set_defaults(func=_cmd_init)
+
+    inbox = sub.add_parser(
+        "inbox", help="capture postings from the browser; list what is pending"
+    )
+    inbox.add_argument("--serve", action="store_true",
+                       help="run the receiver and open the install page")
+    inbox.add_argument("--port", type=int, default=None)
+    inbox.add_argument("--dir", default=None,
+                       help="jd-inbox directory or its parent (default: $CAREERKIT_RUNS)")
+    inbox.add_argument("--no-browser", action="store_true")
+    inbox.set_defaults(func=_cmd_inbox)
 
     prep = sub.add_parser(
         "prep", help="interview prep sheet from a run: bounds, open items, probes"
