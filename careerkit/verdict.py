@@ -108,7 +108,7 @@ def build_verdict(
             hard_gates.append(f"{note.requirement_text}: {note.detail}")
 
     tenure_lines: list[str] = []
-    for f in tenure_findings(coverages, spine):
+    for f in tenure_findings(coverages, spine, units):
         tenure_lines.append(f.detail)
         if f.meets is False:
             hard_gates.append(f"{f.requirement_text}: {f.detail}")

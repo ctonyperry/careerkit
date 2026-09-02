@@ -5,11 +5,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from careerkit.coverage import assess_jd
 from careerkit.dataload import load_declined, load_parsed_jd, load_spine, load_units
 from careerkit.jd import ParsedJD, Requirement
 from careerkit.outcomes import build_ledger
 from careerkit.outcomes import render as render_ledger
 from careerkit.paths import SAMPLE_CORPUS
+from careerkit.strategy import tenure_findings
 from careerkit.verdict import build_verdict, render
 
 DATA = SAMPLE_CORPUS / "data"
@@ -29,9 +31,28 @@ def test_sample_verdict_is_apply_with_probing_and_a_plain_no() -> None:
     assert v.name_in_the_letter == []
     assert any("security questionnaires" in p for p in v.expect_probing)
     assert any("Kubernetes" in s for s in v.say_no_plainly)  # the declined record's words
-    assert v.tenure and "17 years" in v.tenure[0]
+    assert v.tenure and "roles carrying customer-facing span 2012 to 2026 = 14 years" in v.tenure[0]
     assert v.credentials and "not a gate" in v.credentials[0]
     assert v.hard_gates == []
+
+
+def test_tenure_is_computed_from_the_spine_not_typed() -> None:
+    """A tagged tenure want scores the roles that carry the tag, not the
+    whole timeline. The first verdict on a live posting said 31 years against
+    a customer-facing want the page itself put at six."""
+    units, spine, declined = _corpus()
+    jd = load_parsed_jd(JD)
+    (tagged,) = tenure_findings(assess_jd(jd, units, spine, declined), spine, units)
+    assert tagged.required_years == 5 and tagged.actual_years == 14 and tagged.meets is True
+    (whole,) = tenure_findings(assess_jd(jd, units, spine, declined), spine)
+    assert whole.actual_years == 17  # 2009 to 2026: the arithmetic without units
+    short = ParsedJD(source="x", title_to_mirror="T", role_family="f", seniority="s",
+                     requirements=[Requirement(id="t", text="20+ years of SSO work",
+                                               skills=["sso"], weight="required",
+                                               kind="tenure")])
+    v = build_verdict(short, units, spine, declined)
+    assert v.recommendation == "hard-gate"
+    assert any("roles carrying sso span" in g for g in v.hard_gates)
 
 
 def test_a_required_miss_means_name_the_gap() -> None:

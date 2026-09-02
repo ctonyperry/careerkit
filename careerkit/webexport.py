@@ -143,7 +143,7 @@ def build_export(
     notes_by_req: dict[str, list[StrategyNote]] = {}
     for note in strategy_notes(coverages):
         notes_by_req.setdefault(note.requirement_id, []).append(note)
-    tenure_by_req = {t.requirement_id: t for t in tenure_findings(coverages, spine)}
+    tenure_by_req = {t.requirement_id: t for t in tenure_findings(coverages, spine, units)}
 
     wants: list[Want] = []
     for cov in coverages:

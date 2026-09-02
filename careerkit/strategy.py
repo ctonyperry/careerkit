@@ -30,7 +30,7 @@ from careerkit.coverage import (
     earliest_start_year,
     reference_year,
 )
-from careerkit.models import Spine
+from careerkit.models import EvidenceUnit, Spine
 
 # "or equivalent (experience)" turns a credential from a hard gate into
 # boilerplate the candidate can satisfy with evidence.
@@ -140,11 +140,50 @@ def _declined_note(
     )
 
 
-def _tenure_finding(cov: RequirementCoverage, spine: Spine) -> TenureFinding:
+def _tagged_span(cov: RequirementCoverage, spine: Spine,
+                 units: list[EvidenceUnit]) -> tuple[int, str] | None:
+    """Years covered by the roles whose units carry the requirement's skills.
+
+    "7+ years customer-facing" is not "7+ years alive". The first verdict on
+    a real posting said 31 years against a customer-facing want the page
+    itself put at six, and a hiring manager caught it in one read. Roles are
+    intervals; the answer is the union of the intervals of roles carrying the
+    tag, in whole years, with the spans named so the person can check them.
+    """
+    wanted = set(cov.requirement.skills)
+    if not wanted:
+        return None
+    role_ids = {u.role for u in units if u.role and wanted & set(u.skills)}
+    spans = sorted(
+        (s, e) for r in spine.roles if r.id in role_ids
+        if (s := r.start_year()) is not None and (e := r.end_year()) is not None
+    )
+    if not spans:
+        return None
+    merged: list[list[int]] = []
+    for s, e in spans:
+        if merged and s <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], e)
+        else:
+            merged.append([s, e])
+    years = sum(e - s for s, e in merged)
+    named = ", ".join(f"{s} to {e}" for s, e in merged)
+    return years, named
+
+
+def _tenure_finding(
+    cov: RequirementCoverage, spine: Spine, units: list[EvidenceUnit] | None = None
+) -> TenureFinding:
     match = _YEARS_RE.search(cov.requirement.text)
     required = int(match.group(1)) if match else None
-    actual = career_span_years(spine)
-    math = f"{earliest_start_year(spine)} to {reference_year(spine)} = {actual} years"
+    tagged = _tagged_span(cov, spine, units or [])
+    if tagged:
+        actual, named = tagged
+        tags = ", ".join(cov.requirement.skills)
+        math = f"roles carrying {tags} span {named} = {actual} years"
+    else:
+        actual = career_span_years(spine)
+        math = f"{earliest_start_year(spine)} to {reference_year(spine)} = {actual} years"
     meets = None if required is None else actual >= required
     if required is None:
         detail = (
@@ -182,10 +221,14 @@ def strategy_notes(coverages: list[RequirementCoverage]) -> list[StrategyNote]:
 
 
 def tenure_findings(
-    coverages: list[RequirementCoverage], spine: Spine
+    coverages: list[RequirementCoverage], spine: Spine,
+    units: list[EvidenceUnit] | None = None,
 ) -> list[TenureFinding]:
+    """With units, a tenure want scores the years of the roles that carry
+    its tags; without them, the whole timeline, which is only honest for a
+    want with no tag."""
     return [
-        _tenure_finding(cov, spine)
+        _tenure_finding(cov, spine, units)
         for cov in coverages
         if cov.requirement.kind == "tenure"
     ]

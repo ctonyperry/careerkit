@@ -905,3 +905,22 @@ defects:
       and says "unmapped" when they outnumber the hits. The underlying scoring
       of an empty list is unchanged, because the credential and tenure
       requirements rely on it; the verdict is where the meaning is assigned.
+
+  - id: tenure-counted-the-whole-timeline
+    date: 2026-09-02
+    shipped: false
+    scope: document
+    text: "Tenure: Requires 7+ years; spine shows 1995 to 2026 = 31 years (meets)."
+    problem: >-
+      The verdict answered a "7+ years customer-facing" want with the whole
+      career span, while the page itself said six years at LinkedIn. The
+      hiring-manager reader caught it in one pass: "he is under the stated
+      bar". The arithmetic was defensible and the answer was wrong, because
+      the want has a tag and the sum ignored it.
+    caught_by: panel-hiring-manager
+    enforced_by: test:test_tenure_is_computed_from_the_spine_not_typed
+    note: >-
+      A tagged tenure want now scores the union of the spans of roles whose
+      units carry the tag, and names them. An untagged want still gets the
+      whole timeline, which is the only honest reading of "N years of
+      experience" with nothing after it.

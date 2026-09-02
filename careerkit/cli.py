@@ -53,7 +53,7 @@ def _cmd_gap(args: argparse.Namespace) -> int:
     coverages = assess_jd(jd, units, spine, declined)
     questions = generate_questions(coverages)
     notes = strategy_notes(coverages)
-    tenure = tenure_findings(coverages, spine)
+    tenure = tenure_findings(coverages, spine, units)
     report = render_gap_report(jd, coverages, questions, notes, tenure)
 
     out = Path(args.out)
