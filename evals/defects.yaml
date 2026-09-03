@@ -924,3 +924,19 @@ defects:
       units carry the tag, and names them. An untagged want still gets the
       whole timeline, which is the only honest reading of "N years of
       experience" with nothing after it.
+
+  - id: decided-term-still-listed-as-unmapped
+    date: 2026-09-02
+    shipped: false
+    scope: document
+    text: "## Terms the record does not map: technical objections"
+    problem: >-
+      An alias was recorded for "technical objections" and the verdict
+      re-mapped the want with it, then listed the same term under "Terms the
+      record does not map". The counts and the list disagreed on one page.
+    caught_by: author
+    enforced_by: test:test_a_decided_term_leaves_the_unmapped_list
+    note: >-
+      The verdict's unmapped list now excludes any term with a recorded
+      decision, whatever the decision was. The parse on disk is untouched.
+

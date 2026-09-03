@@ -12,6 +12,7 @@ from careerkit.outcomes import build_ledger
 from careerkit.outcomes import render as render_ledger
 from careerkit.paths import SAMPLE_CORPUS
 from careerkit.strategy import tenure_findings
+from careerkit.terms import TermDecision
 from careerkit.verdict import build_verdict, render
 
 DATA = SAMPLE_CORPUS / "data"
@@ -138,3 +139,18 @@ def test_an_export_block_is_exported_not_sent(tmp_path: Path) -> None:
 def test_sample_run_makes_a_one_row_ledger() -> None:
     ledger = build_ledger(SAMPLE_CORPUS.parent / "sample-run")
     assert len(ledger.rows) == 0 or ledger.rows[0].company == "Halcyon Robotics"
+
+
+def test_a_decided_term_leaves_the_unmapped_list() -> None:
+    units, spine, declined = _corpus()
+    jd = ParsedJD(
+        source="x", title_to_mirror="x", role_family="x", seniority="x",
+        requirements=[Requirement(id="obj", text="Address technical objections",
+                                  skills=[], weight="required")],
+        unknown_terms=["technical objections", "data residency"],
+    )
+    decision = TermDecision(term="technical objections", decision="alias",
+                            tag="stakeholder-guidance", note="handled them", date="2026-09-02")
+    v = build_verdict(jd, units, spine, declined, [decision])
+    assert v.unknown_terms == ["data residency"]
+    assert "technical objections" not in render(v)

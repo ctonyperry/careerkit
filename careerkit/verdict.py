@@ -21,7 +21,7 @@ from careerkit.coverage import CoverageStatus, RequirementCoverage, assess_jd
 from careerkit.jd import ParsedJD
 from careerkit.models import DeclinedRecord, EvidenceUnit, Spine
 from careerkit.strategy import strategy_notes, tenure_findings
-from careerkit.terms import GAP_PREFIX, TermDecision, apply_decisions
+from careerkit.terms import GAP_PREFIX, TermDecision, _norm, apply_decisions
 
 Recommendation = Literal["apply", "name-the-gap", "unmapped", "hard-gate"]
 
@@ -80,6 +80,7 @@ def build_verdict(
 ) -> Verdict:
     declined = declined or []
     jd = apply_decisions(jd, terms or [])
+    decided = {_norm(t.term) for t in (terms or [])}
     declined_text = {s: r.text for r in declined for s in r.skills}
     coverages = assess_jd(jd, units, spine, declined)
 
@@ -147,7 +148,7 @@ def build_verdict(
         name_in_the_letter=name,
         expect_probing=probing,
         say_no_plainly=say_no,
-        unknown_terms=list(jd.unknown_terms),
+        unknown_terms=[t for t in jd.unknown_terms if _norm(t) not in decided],
     )
 
 
